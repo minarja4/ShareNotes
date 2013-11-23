@@ -6,13 +6,19 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class JsonUser {
 
     private Integer id;
+    private String username;
     private String email;
     private String password;
 
     public JsonUser() {
     }
 
-    public JsonUser(String email, String password) {
+    public JsonUser(String username) {
+        this(username, null, null);
+    }
+
+    public JsonUser(String username, String email, String password) {
+        this.username = username;
         this.email = email;
         this.password = password;
     }
@@ -26,12 +32,21 @@ public class JsonUser {
         this.id = uid;
     }
 
+    @JsonProperty("username")
+    public String getUsername() {
+        return this.username;
+    }
+
+    @JsonIgnore //username nelze zmenit
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @JsonProperty("email")
     public String getEmail() {
         return this.email;
     }
 
-    @JsonIgnore //email nelze zmenit
     public void setEmail(String email) {
         this.email = email;
     }

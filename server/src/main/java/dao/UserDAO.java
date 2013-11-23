@@ -3,7 +3,6 @@ package dao;
 import com.sun.jersey.api.NotFoundException;
 import exception.BadRequestException;
 import exception.NotAuthorizedException;
-import java.util.List;
 import javax.ws.rs.WebApplicationException;
 import jsonmodel.JsonUser;
 import model.User;
@@ -16,35 +15,16 @@ import utils.ValidateUtil;
 
 public class UserDAO extends AbstractDAO<User, JsonUser> {
 
-    @Override
-    public List<User> all() {
-        return null;
+    public User byUsername(JsonUser json) {
+        return byUsername(json.getUsername());
     }
 
-    @Override
-    public User byId(int id) {
-        User user = null;
-        try {
-            Transaction tx = session.beginTransaction();
-            user = (User) session.get(User.class, id);
-            tx.commit();
-            if (user == null) {
-                throw new NotFoundException("User not found");
-            }
-        } catch (NotFoundException e) {
-            throw e;
-        } catch (HibernateException e) {
-            throw new BadRequestException("Hibernate exception");
-        }
-        return user;
-    }
-
-    public User byEmail(String email) {
+    public User byUsername(String username) {
         User user = null;
         try {
             Transaction tx = session.beginTransaction();
 
-            Criteria criteria = session.createCriteria(User.class).add(Restrictions.eq("email", email));
+            Criteria criteria = session.createCriteria(User.class).add(Restrictions.eq("username", username));
             if (criteria.list().size() != 1) {
                 throw new NotFoundException("User not found");
             }
@@ -61,6 +41,9 @@ public class UserDAO extends AbstractDAO<User, JsonUser> {
     @Override
     public User create(JsonUser user) {
         User newUser = null;
+        if (!ValidateUtil.username(user.getUsername())) {
+            throw new BadRequestException("Username has incorrect format");
+        }
         if (!ValidateUtil.email(user.getEmail())) {
             throw new BadRequestException("User email has incorrect format");
         }
@@ -70,15 +53,16 @@ public class UserDAO extends AbstractDAO<User, JsonUser> {
         try {
             Transaction tx = session.beginTransaction();
 
-            Criteria criteria = session.createCriteria(User.class).add(Restrictions.eq("email", user.getEmail()));
+            Criteria criteria = session.createCriteria(User.class).add(Restrictions.eq("username", user.getUsername()));
             if (criteria.list().size() > 0) {
-                throw new BadRequestException("User with same email already exists");
+                throw new BadRequestException("User with same username already exists");
             }
             newUser = new User();
+            newUser.setUsername(user.getUsername());
             newUser.setEmail(user.getEmail());
             //TODO: ma se heslo posilat jiz zahashovane nebo ne?
             newUser.setPassword(user.getPassword()); //HashUtil.sha256(user.getPassword()));
-            newUser.setToken(HashUtil.sha256(user.getEmail() + "" + System.currentTimeMillis()));
+            newUser.setToken(HashUtil.sha256(user.getUsername() + "" + System.currentTimeMillis()));
             session.save(newUser);
             tx.commit();
         } catch (WebApplicationException e) {
@@ -89,24 +73,22 @@ public class UserDAO extends AbstractDAO<User, JsonUser> {
         return newUser;
     }
 
-    @Override
-    public User update(JsonUser entity, int id) {
-        return null;
-    }
-
-    @Override
-    public User delete(int id) {
-        return null;
-    }
-
     public User login(JsonUser json) {
-        User user = byEmail(json.getEmail());
-        
+        User user = byUsername(json.getUsername());
+
         //mozna zmenit token?
 
         //TODO: ma se heslo posilat jiz zahashovane nebo ne?
         if (!user.getPassword().equals(json.getPassword())) {
             throw new NotAuthorizedException("Password is incorrect");
+        }
+        return user;
+    }
+
+    public User authorized(String username, String token) {
+        User user = byUsername(username);
+        if (!user.getToken().equals(token)) {
+            throw new NotAuthorizedException("Not authorized to perform this action");
         }
         return user;
     }

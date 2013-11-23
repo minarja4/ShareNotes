@@ -11,14 +11,18 @@ public class ValidateUtil {
     private static Pattern patternEmail = Pattern.compile(EMAIL_PATTERN);
     private static final String PASSWORD = "[A-Za-z\\d@#$%]{4,64}";
     private static Pattern patternPass = Pattern.compile(PASSWORD);
+    private static final String USERNAME = "[A-Za-z\\d]{4,64}";
+    private static Pattern patternUser = Pattern.compile(USERNAME);
+
+    public static boolean username(String name) {
+        return (name != null ? patternUser.matcher(name).matches() : false);
+    }
 
     public static boolean email(String hex) {
-        Matcher matcher = patternEmail.matcher(hex);
-        return matcher.matches();
+        return (hex != null ? patternEmail.matcher(hex).matches() : false);
     }
 
     public static boolean password(String pass) {
-        Matcher matcher = patternPass.matcher(pass);
-        return matcher.matches();
+        return (pass != null ? patternPass.matcher(pass).matches() : false);
     }
 }

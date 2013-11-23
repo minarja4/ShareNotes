@@ -1,20 +1,21 @@
 -- token, password SHA256
 CREATE TABLE User (
-    uid      INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    email       VARCHAR(100),
-    password    CHAR(64),
-    token       CHAR(64),
+    uid         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    username    VARCHAR(64) NOT NULL,
+    email       VARCHAR(100) NOT NULL,
+    password    CHAR(64) NOT NULL,
+    token       CHAR(64) NOT NULL,
     PRIMARY KEY(uid)
 ) ENGINE=InnoDB;
 
 CREATE TABLE Note (
     nid         INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    name        VARCHAR(100),
+    name        VARCHAR(100) NOT NULL,
     note        TEXT,
     version     INT UNSIGNED,
     owner       INT UNSIGNED NOT NULL,
     PRIMARY KEY(nid),
-    CONSTRAINT FOREIGN KEY(owner) REFERENCES User(uid)
+    CONSTRAINT FOREIGN KEY(owner) REFERENCES User(uid) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE Share (
@@ -24,5 +25,5 @@ CREATE TABLE Share (
     PRIMARY KEY(user, note)
 ) ENGINE=InnoDB;
 
-ALTER TABLE Share ADD CONSTRAINT fk_user FOREIGN KEY(user) REFERENCES User(uid),
-                  ADD CONSTRAINT fk_note FOREIGN KEY(note) REFERENCES Note(nid);
+ALTER TABLE Share ADD CONSTRAINT fk_user FOREIGN KEY(user) REFERENCES User(uid) ON DELETE CASCADE,
+                  ADD CONSTRAINT fk_note FOREIGN KEY(note) REFERENCES Note(nid) ON DELETE CASCADE;

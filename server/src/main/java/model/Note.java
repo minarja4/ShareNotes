@@ -55,7 +55,7 @@ public class Note implements java.io.Serializable {
         this.version = version;
     }
 
-    @Column(name = "name", length = 100)
+    @Column(name = "name", length = 100, nullable = false)
     public String getName() {
         return this.name;
     }

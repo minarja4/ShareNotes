@@ -10,13 +10,13 @@ import jsonmodel.JsonToken;
 import jsonmodel.JsonUser;
 import jsonmodel.Transformer;
 
-@Path("/user/")
+@Path("/users/")
 public class UserResource {
 
     /**
-     * Dostane email a heslo noveho uzivatele a zaregistruje ho.
+     * Dostane username, email a heslo noveho uzivatele a zaregistruje ho.
      *
-     * @param json {"email": XY, "password": XY}
+     * @param json {"username": XY, "email": XY, "password": XY}
      */
     @POST
     @Path("/")
@@ -28,13 +28,13 @@ public class UserResource {
     }
 
     /**
-     * Dostane email a heslo registrovaneho uzivatele a vrati token se kterym
+     * Dostane username a heslo registrovaneho uzivatele a vrati token se kterym
      * bude uzivatel dale pracovat pro manipulaci s poznamkami.
      *
-     * @param json {"email": XY, "password": XY}
+     * @param json {"username": XY, "password": XY}
      */
     @POST
-    @Path("/login")
+    @Path("/login/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public JsonToken login(JsonUser json) {

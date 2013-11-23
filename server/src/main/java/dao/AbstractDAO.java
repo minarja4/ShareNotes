@@ -15,13 +15,23 @@ public abstract class AbstractDAO<R, J> {
         this.session = HibernateUtil.getSessionFactory().getCurrentSession();
     }
 
-    public abstract List<R> all();
-    
-    public abstract R byId(int id);
+    public List<R> all() {
+        return null;
+    }
 
-    public abstract R create(J entity);
+    public R byId(int id) {
+        return null;
+    }
 
-    public abstract R update(J entity, int id);
+    public R create(J entity) {
+        return null;
+    }
 
-    public abstract R delete(int id);
+    public R update(J entity, int id) {
+        return null;
+    }
+
+    public R delete(int id) {
+        return null;
+    }
 }

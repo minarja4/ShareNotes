@@ -16,6 +16,7 @@ import javax.persistence.Table;
 public class User implements java.io.Serializable {
 
     private Integer id;
+    private String username;
     private String email;
     private String password;
     private String token;
@@ -24,14 +25,16 @@ public class User implements java.io.Serializable {
     public User() {
     }
 
-    public User(String email, String password, String token) {
+    public User(String username, String email, String password, String token) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.token = token;
         this.notes = new HashSet<Note>();
     }
 
-    public User(String email, String password, String token, Set<Note> notes) {
+    public User(String username, String email, String password, String token, Set<Note> notes) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.token = token;
@@ -49,7 +52,16 @@ public class User implements java.io.Serializable {
         this.id = uid;
     }
 
-    @Column(name = "email", length = 100)
+    @Column(name = "username", length = 64, nullable = false)
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Column(name = "email", length = 100, nullable = false)
     public String getEmail() {
         return this.email;
     }
@@ -58,7 +70,7 @@ public class User implements java.io.Serializable {
         this.email = email;
     }
 
-    @Column(name = "password", length = 64)
+    @Column(name = "password", length = 64, nullable = false)
     public String getPassword() {
         return this.password;
     }
@@ -67,7 +79,7 @@ public class User implements java.io.Serializable {
         this.password = password;
     }
 
-    @Column(name = "token", length = 64)
+    @Column(name = "token", length = 64, nullable = false)
     public String getToken() {
         return this.token;
     }
