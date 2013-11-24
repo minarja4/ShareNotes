@@ -31,6 +31,23 @@ public class ShareDAO extends AbstractDAO<Share, JsonAccess> {
         return notes;
     }
 
+    public List<Note> allShared(User user) {
+        List<Note> notes = new ArrayList<Note>();
+        try {
+            Transaction tx = session.beginTransaction();
+            Criteria criteria = session.createCriteria(Share.class)
+                    .add(Restrictions.eq("user", user));
+
+            for (Share s : (List<Share>) criteria.list()) {
+                notes.add(s.getNote());
+            }
+            tx.commit();
+        } catch (HibernateException e) {
+            throw new BadRequestException("Hibernate exception: " + e.getMessage());
+        }
+        return notes;
+    }
+
     public List<Share> allAccess(Note note) {
         List<Share> shares = new ArrayList<Share>();
         try {
@@ -62,7 +79,7 @@ public class ShareDAO extends AbstractDAO<Share, JsonAccess> {
         return share;
     }
 
-    public List<Share> create(List<JsonAccess> list, int noteId) {
+    public List<Share> createAccess(List<JsonAccess> list, int noteId) {
         List<Share> shares = null;
         try {
             Transaction tx = session.beginTransaction();
@@ -112,7 +129,7 @@ public class ShareDAO extends AbstractDAO<Share, JsonAccess> {
         return shares;
     }
 
-    public List<Share> update(List<JsonAccess> list, int noteId) {
+    public List<Share> updateAccess(List<JsonAccess> list, int noteId) {
         List<Share> shares = null;
         try {
             Transaction tx = session.beginTransaction();
@@ -184,5 +201,47 @@ public class ShareDAO extends AbstractDAO<Share, JsonAccess> {
         } catch (HibernateException e) {
             throw new BadRequestException("Hibernate exception " + e.getMessage());
         }
+    }
+
+    public Share byUserNote(int userId, int noteId) {
+        Share share = null;
+        try {
+            Transaction tx = session.beginTransaction();
+            share = (Share) session.get(Share.class, new ShareId(userId, noteId));
+            if (share == null) {
+                throw new NotFoundException("The note is not shared with the user");
+            }
+            tx.commit();
+        } catch (NotFoundException e) {
+            throw e;
+        } catch (HibernateException e) {
+            throw new BadRequestException("Hibernate exception " + e.getMessage());
+        }
+        return share;
+    }
+
+    public Share signoff(User user, Note note) {
+        Share share = null;
+        try {
+            Transaction tx = session.beginTransaction();
+            share = (Share) session.get(Share.class, new ShareId(user.getId(), note.getId()));
+            if (share == null) {
+                throw new NotFoundException("The note is not shared with the user");
+            }
+            session.delete(share);
+
+            note = (Note) session.get(Note.class, note.getId());
+            Criteria criteria = session.createCriteria(Share.class).add(Restrictions.eq("note", note));
+            if (criteria.list().isEmpty()) {
+                note.setShared(Boolean.FALSE);
+                session.save(note);
+            }
+            tx.commit();
+        } catch (NotFoundException e) {
+            throw e;
+        } catch (HibernateException e) {
+            throw new BadRequestException("Hibernate exception " + e.getMessage());
+        }
+        return share;
     }
 }

@@ -38,7 +38,7 @@ public class SharingResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public List<JsonNote> sharing(@PathParam("username") String username,
             @HeaderParam("X-Token") String token) {
-        User user = SecurityUtil.token(username, token);
+        User user = SecurityUtil.checkToken(username, token);
         return Transformer.notesTransform(new ShareDAO().allSharing(user));
     }
 
@@ -53,8 +53,8 @@ public class SharingResource {
     public List<JsonAccess> get(@PathParam("username") String username,
             @HeaderParam("X-Token") String token,
             @PathParam("noteId") int noteId) {
-        User user = SecurityUtil.token(username, token);
-        Note note = SecurityUtil.noteOwnership(user, noteId);
+        User user = SecurityUtil.checkToken(username, token);
+        Note note = SecurityUtil.checkNoteOwnership(user, noteId);
         return Transformer.sharesTransform(new ShareDAO().allAccess(note));
     }
 
@@ -70,9 +70,9 @@ public class SharingResource {
             @HeaderParam("X-Token") String token,
             @PathParam("noteId") int noteId,
             List<JsonAccess> list) {
-        User user = SecurityUtil.token(username, token);
-        SecurityUtil.noteOwnership(user, noteId);
-        return Transformer.sharesTransform(new ShareDAO().create(list, noteId));
+        User user = SecurityUtil.checkToken(username, token);
+        SecurityUtil.checkNoteOwnership(user, noteId);
+        return Transformer.sharesTransform(new ShareDAO().createAccess(list, noteId));
     }
 
     /**
@@ -87,9 +87,9 @@ public class SharingResource {
             @HeaderParam("X-Token") String token,
             @PathParam("noteId") int noteId,
             List<JsonAccess> list) {
-        User user = SecurityUtil.token(username, token);
-        SecurityUtil.noteOwnership(user, noteId);
-        return Transformer.sharesTransform(new ShareDAO().update(list, noteId));
+        User user = SecurityUtil.checkToken(username, token);
+        SecurityUtil.checkNoteOwnership(user, noteId);
+        return Transformer.sharesTransform(new ShareDAO().updateAccess(list, noteId));
     }
 
     /**
@@ -103,8 +103,8 @@ public class SharingResource {
     public void unshare(@PathParam("username") String username,
             @HeaderParam("X-Token") String token,
             @PathParam("noteId") int noteId) {
-        User user = SecurityUtil.token(username, token);
-        Note note = SecurityUtil.noteOwnership(user, noteId);
+        User user = SecurityUtil.checkToken(username, token);
+        Note note = SecurityUtil.checkNoteOwnership(user, noteId);
         new ShareDAO().unshare(note);
     }
 }

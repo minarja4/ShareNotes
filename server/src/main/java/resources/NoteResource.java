@@ -30,7 +30,7 @@ public class NoteResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public List<JsonNote> list(@PathParam("username") String username,
             @HeaderParam("X-Token") String token) {
-        User user = SecurityUtil.token(username, token);
+        User user = SecurityUtil.checkToken(username, token);
         return Transformer.notesTransform(new NoteDAO().all(user));
     }
 
@@ -43,7 +43,7 @@ public class NoteResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public JsonNote create(@PathParam("username") String username,
             JsonNote newNote, @HeaderParam("X-Token") String token) {
-        User user = SecurityUtil.token(username, token);
+        User user = SecurityUtil.checkToken(username, token);
         return Transformer.transform(new NoteDAO().create(user, newNote));
     }
 
@@ -56,8 +56,8 @@ public class NoteResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public JsonNote get(@PathParam("username") String username,
             @PathParam("noteId") int noteId, @HeaderParam("X-Token") String token) {
-        User user = SecurityUtil.token(username, token);
-        Note note = SecurityUtil.noteOwnership(user, noteId);
+        User user = SecurityUtil.checkToken(username, token);
+        Note note = SecurityUtil.checkNoteOwnership(user, noteId);
         return Transformer.transform(note);
     }
 
@@ -71,8 +71,8 @@ public class NoteResource {
     public JsonNote change(@PathParam("username") String username,
             @PathParam("noteId") int noteId, @HeaderParam("X-Token") String token,
             JsonNote newNote) {
-        User user = SecurityUtil.token(username, token);
-        SecurityUtil.noteOwnership(user, noteId);
+        User user = SecurityUtil.checkToken(username, token);
+        SecurityUtil.checkNoteOwnership(user, noteId);
         return Transformer.transform(new NoteDAO().update(newNote, noteId));
     }
 
@@ -85,8 +85,8 @@ public class NoteResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public void delete(@PathParam("username") String username,
             @PathParam("noteId") int noteId, @HeaderParam("X-Token") String token) {
-        User user = SecurityUtil.token(username, token);
-        SecurityUtil.noteOwnership(user, noteId);
+        User user = SecurityUtil.checkToken(username, token);
+        SecurityUtil.checkNoteOwnership(user, noteId);
         new NoteDAO().delete(noteId);
     }
 }

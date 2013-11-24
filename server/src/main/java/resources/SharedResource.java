@@ -1,5 +1,7 @@
 package resources;
 
+import dao.NoteDAO;
+import dao.ShareDAO;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -11,6 +13,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import jsonmodel.JsonNote;
+import jsonmodel.Transformer;
+import model.Note;
+import model.User;
 import utils.SecurityUtil;
 
 /**
@@ -32,8 +37,8 @@ public class SharedResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public List<JsonNote> shared(@PathParam("username") String username,
             @HeaderParam("X-Token") String token) {
-        SecurityUtil.token(username, token);
-        return null;
+        User user = SecurityUtil.checkToken(username, token);
+        return Transformer.notesTransform(new ShareDAO().allShared(user));
     }
 
     /**
@@ -43,11 +48,11 @@ public class SharedResource {
     @Path("/{noteId}/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<JsonNote> get(@PathParam("username") String username,
+    public JsonNote get(@PathParam("username") String username,
             @HeaderParam("X-Token") String token,
             @PathParam("noteId") int noteId) {
-        SecurityUtil.token(username, token);
-        return null;
+        User user = SecurityUtil.checkToken(username, token);
+        return Transformer.transform(SecurityUtil.canReadNote(user, noteId));
     }
 
     /**
@@ -58,11 +63,13 @@ public class SharedResource {
     @Path("/{noteId}/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<JsonNote> update(@PathParam("username") String username,
+    public JsonNote update(@PathParam("username") String username,
             @HeaderParam("X-Token") String token,
-            @PathParam("noteId") int noteId) {
-        SecurityUtil.token(username, token);
-        return null;
+            @PathParam("noteId") int noteId,
+            JsonNote note) {
+        User user = SecurityUtil.checkToken(username, token);
+        SecurityUtil.canWriteNote(user, noteId);
+        return Transformer.transform(new NoteDAO().update(note, noteId));
     }
 
     /**
@@ -76,6 +83,8 @@ public class SharedResource {
     public void signoff(@PathParam("username") String username,
             @HeaderParam("X-Token") String token,
             @PathParam("noteId") int noteId) {
-        SecurityUtil.token(username, token);
+        User user = SecurityUtil.checkToken(username, token);
+        Note note = SecurityUtil.canReadNote(user, noteId);
+        new ShareDAO().signoff(user, note);
     }
 }
