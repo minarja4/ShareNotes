@@ -17,6 +17,7 @@ public class Note implements java.io.Serializable {
 
     private Integer id;
     private Integer version;
+    private Boolean shared;
     private String name;
     private String note;
     private User owner;
@@ -31,6 +32,14 @@ public class Note implements java.io.Serializable {
     public Note(String name, String note, User owner) {
         this.name = name;
         this.note = note;
+        this.owner = owner;
+    }
+
+    public Note(String name, String note, Integer version, Boolean shared, User owner) {
+        this.name = name;
+        this.note = note;
+        this.version = version;
+        this.shared = shared;
         this.owner = owner;
     }
 
@@ -71,6 +80,15 @@ public class Note implements java.io.Serializable {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    @Column(name = "shared")
+    public Boolean getShared() {
+        return this.shared;
+    }
+
+    public void setShared(Boolean shared) {
+        this.shared = shared;
     }
 
     @ManyToOne(fetch = FetchType.EAGER)

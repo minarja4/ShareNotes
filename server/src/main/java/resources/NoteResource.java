@@ -1,7 +1,6 @@
 package resources;
 
 import dao.NoteDAO;
-import dao.UserDAO;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -15,7 +14,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import jsonmodel.JsonNote;
 import jsonmodel.Transformer;
+import model.Note;
 import model.User;
+import utils.SecurityUtil;
 
 @Path("/{username}/notes/")
 public class NoteResource {
@@ -29,8 +30,8 @@ public class NoteResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public List<JsonNote> list(@PathParam("username") String username,
             @HeaderParam("X-Token") String token) {
-        User user = checkToken(username, token);
-        return Transformer.transform(new NoteDAO().all(user));
+        User user = SecurityUtil.token(username, token);
+        return Transformer.notesTransform(new NoteDAO().all(user));
     }
 
     /**
@@ -42,7 +43,7 @@ public class NoteResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public JsonNote create(@PathParam("username") String username,
             JsonNote newNote, @HeaderParam("X-Token") String token) {
-        User user = checkToken(username, token);
+        User user = SecurityUtil.token(username, token);
         return Transformer.transform(new NoteDAO().create(user, newNote));
     }
 
@@ -55,8 +56,9 @@ public class NoteResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public JsonNote get(@PathParam("username") String username,
             @PathParam("noteId") int noteId, @HeaderParam("X-Token") String token) {
-        checkToken(username, token);
-        return Transformer.transform(new NoteDAO().byId(noteId));
+        User user = SecurityUtil.token(username, token);
+        Note note = SecurityUtil.noteOwnership(user, noteId);
+        return Transformer.transform(note);
     }
 
     /**
@@ -69,7 +71,8 @@ public class NoteResource {
     public JsonNote change(@PathParam("username") String username,
             @PathParam("noteId") int noteId, @HeaderParam("X-Token") String token,
             JsonNote newNote) {
-        checkToken(username, token);
+        User user = SecurityUtil.token(username, token);
+        SecurityUtil.noteOwnership(user, noteId);
         return Transformer.transform(new NoteDAO().update(newNote, noteId));
     }
 
@@ -80,13 +83,10 @@ public class NoteResource {
     @Path("/{noteId}/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public JsonNote delete(@PathParam("username") String username,
+    public void delete(@PathParam("username") String username,
             @PathParam("noteId") int noteId, @HeaderParam("X-Token") String token) {
-        checkToken(username, token);
-        return Transformer.transform(new NoteDAO().delete(noteId));
-    }
-
-    private User checkToken(String username, String token) {
-        return new UserDAO().authorized(username, token);
+        User user = SecurityUtil.token(username, token);
+        SecurityUtil.noteOwnership(user, noteId);
+        new NoteDAO().delete(noteId);
     }
 }

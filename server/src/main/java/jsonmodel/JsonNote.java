@@ -2,6 +2,10 @@ package jsonmodel;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import utils.UserDeserializer;
+import utils.UserSerializer;
 
 public class JsonNote {
 
@@ -62,11 +66,13 @@ public class JsonNote {
     }
 
     @JsonProperty("owner")
+    @JsonSerialize(using = UserSerializer.class)
     public JsonUser getOwner() {
         return this.owner;
     }
 
     @JsonIgnore //vlastnika nelze menit
+    @JsonDeserialize(using = UserDeserializer.class)
     public void setOwner(JsonUser owner) {
         this.owner = owner;
     }

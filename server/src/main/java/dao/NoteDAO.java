@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import jsonmodel.JsonNote;
 import model.Note;
+import model.Share;
 import model.User;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -18,16 +19,16 @@ public class NoteDAO extends AbstractDAO<Note, JsonNote> {
         List<Note> notes = new ArrayList<Note>();
         try {
             Transaction tx = session.beginTransaction();
-            Criteria criteria = session.createCriteria(Note.class).add(Restrictions.eq("owner", user));
+            Criteria criteria = session.createCriteria(Note.class)
+                    .add(Restrictions.eq("owner", user));
             notes = criteria.list();
             tx.commit();
         } catch (HibernateException e) {
-            throw new BadRequestException("Hibernate exception");
+            throw new BadRequestException("Hibernate exception: " + e.getMessage());
         }
         return notes;
     }
 
-    @Override
     public Note byId(int id) {
         Note note = null;
         try {
@@ -40,7 +41,7 @@ public class NoteDAO extends AbstractDAO<Note, JsonNote> {
         } catch (NotFoundException e) {
             throw e;
         } catch (HibernateException e) {
-            throw new BadRequestException("Hibernate exception");
+            throw new BadRequestException("Hibernate exception: " + e.getMessage());
         }
         return note;
     }
@@ -55,16 +56,16 @@ public class NoteDAO extends AbstractDAO<Note, JsonNote> {
             newNote.setNote(json.getNote());
             newNote.setOwner(user);
             newNote.setVersion(1);
+            newNote.setShared(Boolean.FALSE);
 
             session.save(newNote);
             tx.commit();
         } catch (HibernateException e) {
-            throw new BadRequestException("Hibernate exception");
+            throw new BadRequestException("Hibernate exception: " + e.getMessage());
         }
         return newNote;
     }
 
-    @Override
     public Note update(JsonNote json, int id) {
         Note note = null;
         try {
@@ -81,12 +82,11 @@ public class NoteDAO extends AbstractDAO<Note, JsonNote> {
         } catch (NotFoundException e) {
             throw e;
         } catch (HibernateException e) {
-            throw new BadRequestException("Hibernate exception");
+            throw new BadRequestException("Hibernate exception " + e.getMessage());
         }
         return note;
     }
 
-    @Override
     public Note delete(int id) {
         Note note = null;
         try {
@@ -95,12 +95,16 @@ public class NoteDAO extends AbstractDAO<Note, JsonNote> {
             if (note == null) {
                 throw new NotFoundException("Note not found");
             }
+            Criteria criteria = session.createCriteria(Share.class).add(Restrictions.eq("note", note));
+            for (Share share : (List<Share>) criteria.list()) {
+                session.delete(share);
+            }
             session.delete(note);
             tx.commit();
         } catch (NotFoundException e) {
             throw e;
         } catch (HibernateException e) {
-            throw new BadRequestException("Hibernate exception");
+            throw new BadRequestException("Hibernate exception " + e.getMessage());
         }
         return note;
     }

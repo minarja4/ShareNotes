@@ -3,6 +3,7 @@ package jsonmodel;
 import java.util.ArrayList;
 import java.util.List;
 import model.Note;
+import model.Share;
 import model.User;
 
 public class Transformer {
@@ -26,10 +27,18 @@ public class Transformer {
         return json;
     }
 
-    public static List<JsonNote> transform(List<Note> notes) {
+    public static List<JsonNote> notesTransform(List<Note> notes) {
         List<JsonNote> out = new ArrayList<JsonNote>();
         for (Note note : notes) {
             out.add(transform(note));
+        }
+        return out;
+    }
+
+    public static List<JsonAccess> sharesTransform(List<Share> shares) {
+        List<JsonAccess> out = new ArrayList<JsonAccess>();
+        for (Share share : shares) {
+            out.add(transform(share));
         }
         return out;
     }
@@ -38,5 +47,12 @@ public class Transformer {
         JsonToken token = new JsonToken();
         token.setToken(user.getToken());
         return token;
+    }
+
+    public static JsonAccess transform(Share share) {
+        JsonAccess json = new JsonAccess();
+        json.setUser(transform(share.getUser()));
+        json.setReadonly(share.getReadonly());
+        return json;
     }
 }

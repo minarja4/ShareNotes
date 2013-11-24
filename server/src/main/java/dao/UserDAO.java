@@ -33,12 +33,11 @@ public class UserDAO extends AbstractDAO<User, JsonUser> {
         } catch (NotFoundException e) {
             throw e;
         } catch (HibernateException e) {
-            throw new BadRequestException("Hibernate exception");
+            throw new BadRequestException("Hibernate exception: " + e.getMessage());
         }
         return user;
     }
 
-    @Override
     public User create(JsonUser user) {
         User newUser = null;
         if (!ValidateUtil.username(user.getUsername())) {
@@ -68,7 +67,7 @@ public class UserDAO extends AbstractDAO<User, JsonUser> {
         } catch (WebApplicationException e) {
             throw e;
         } catch (HibernateException e) {
-            throw new BadRequestException("Hibernate exception");
+            throw new BadRequestException("Hibernate exception: " + e.getMessage());
         }
         return newUser;
     }
@@ -81,14 +80,6 @@ public class UserDAO extends AbstractDAO<User, JsonUser> {
         //TODO: ma se heslo posilat jiz zahashovane nebo ne?
         if (!user.getPassword().equals(json.getPassword())) {
             throw new NotAuthorizedException("Password is incorrect");
-        }
-        return user;
-    }
-
-    public User authorized(String username, String token) {
-        User user = byUsername(username);
-        if (!user.getToken().equals(token)) {
-            throw new NotAuthorizedException("Not authorized to perform this action");
         }
         return user;
     }

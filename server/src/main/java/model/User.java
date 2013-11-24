@@ -96,4 +96,10 @@ public class User implements java.io.Serializable {
     public void setNotes(Set<Note> notes) {
         this.notes = notes;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        return hash;
+    }
 }

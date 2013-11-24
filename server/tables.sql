@@ -13,9 +13,10 @@ CREATE TABLE Note (
     name        VARCHAR(100) NOT NULL,
     note        TEXT,
     version     INT UNSIGNED,
+    shared      TINYINT(1) DEFAULT '0',
     owner       INT UNSIGNED NOT NULL,
     PRIMARY KEY(nid),
-    CONSTRAINT FOREIGN KEY(owner) REFERENCES User(uid) ON DELETE CASCADE
+    CONSTRAINT FOREIGN KEY(owner) REFERENCES User(uid)
 ) ENGINE=InnoDB;
 
 CREATE TABLE Share (
@@ -25,5 +26,5 @@ CREATE TABLE Share (
     PRIMARY KEY(user, note)
 ) ENGINE=InnoDB;
 
-ALTER TABLE Share ADD CONSTRAINT fk_user FOREIGN KEY(user) REFERENCES User(uid) ON DELETE CASCADE,
-                  ADD CONSTRAINT fk_note FOREIGN KEY(note) REFERENCES Note(nid) ON DELETE CASCADE;
+ALTER TABLE Share ADD CONSTRAINT fk_user FOREIGN KEY(user) REFERENCES User(uid),
+                  ADD CONSTRAINT fk_note FOREIGN KEY(note) REFERENCES Note(nid);
