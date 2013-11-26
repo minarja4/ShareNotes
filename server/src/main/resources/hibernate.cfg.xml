@@ -10,10 +10,6 @@
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.current_session_context_class">thread</property>
         <property name="hibernate.query.factory_class">org.hibernate.hql.classic.ClassicQueryTranslatorFactory</property>
-        <mapping class="model.ShareId"/>
-        <mapping class="model.User"/>
-        <mapping class="model.Share"/>
-        <mapping class="model.Note"/>
         
         <!-- c3p0 config https://community.jboss.org/wiki/HowToConfigureTheC3P0ConnectionPool -->
         <!-- http://hibernatedb.blogspot.cz/2009/05/automatic-reconnect-from-hibernate-to.html -->
@@ -25,5 +21,10 @@
         <property name="hibernate.c3p0.max_statements">0</property> 
         <property name="hibernate.c3p0.min_size">2</property> 
         <property name="hibernate.c3p0.timeout">1800</property> <!-- seconds --> 
+        
+        <mapping class="model.ShareId"/>
+        <mapping class="model.User"/>
+        <mapping class="model.Share"/>
+        <mapping class="model.Note"/>
     </session-factory>
 </hibernate-configuration>
