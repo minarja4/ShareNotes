@@ -125,4 +125,10 @@ public class MainActivity extends Activity {
     	
     }
     
+    //zobrazeni aktivity na novou poznamku
+    public void add(View view) {
+    	Intent i = new Intent(this, AddNote.class);
+    	startActivity(i);
+    }
+    
 }

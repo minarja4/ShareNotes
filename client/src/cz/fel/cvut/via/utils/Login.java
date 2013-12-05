@@ -7,6 +7,7 @@ public class Login {
 	private static User loggedUser = null;
 	
 	public static User getLoggedUser() {
+		loggedUser = new User();
 		loggedUser.setEmail("pepik@a.cz");
 		loggedUser.setId(1);
 		loggedUser.setPassword("39bb1d9dab93707088db9117960a292bb26f91fd4857303ad0f2f51c4a4a14b4");

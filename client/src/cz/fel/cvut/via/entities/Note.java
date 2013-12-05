@@ -6,16 +6,15 @@ public class Note {
 	private String name;
 	private String note;
 	private int version;
-	private boolean shared;
+//	private boolean shared;
 	private String owner;
 	
-	public Note(int id, String name, String note, int version, boolean shared, String owner) {
+	public Note(int id, String name, String note, int version, String owner) {
 		
 		this.id = id;
 		this.name = name;
 		this.note = note;
-		this.version = version;
-		this.shared = shared;
+		this.version = version;		
 		this.owner = owner;
 	}
 	public Note() {
@@ -44,12 +43,7 @@ public class Note {
 	public void setVersion(int version) {
 		this.version = version;
 	}
-	public boolean isShared() {
-		return shared;
-	}
-	public void setShared(boolean shared) {
-		this.shared = shared;
-	}
+	
 	public String getOwner() {
 		return owner;
 	}

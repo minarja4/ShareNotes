@@ -6,20 +6,28 @@ import java.util.concurrent.ExecutionException;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+import cz.fel.cvut.via.asyncTasks.DeleteNoteTask;
 import cz.fel.cvut.via.asyncTasks.GetMyNotesTask;
 import cz.fel.cvut.via.entities.Note;
 
 public class Notes extends Activity {
 
+	List<Note> notes = null;
+	Note noteToDelete = null;
+	
+	NotesArrayAdapter adapter = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -28,7 +36,7 @@ public class Notes extends Activity {
 		// ziskame svoje poznamky
 		GetMyNotesTask g = new GetMyNotesTask();
 		//g.execute("pepik","a652c7e7312205c3db98dd931d541d1cd6e3e94259e48074ae4242d9a35d473f");
-		
+		g.execute();
 		List<Note> list = null;
 		
 		
@@ -43,13 +51,17 @@ public class Notes extends Activity {
 		}
 
 		
-		
+		notes = list;
 		
 		// v list jsou ted vsechny poznamky usera
 		// zobrazit zatim v gridview
 		ListView listview = (ListView) findViewById(R.id.notesListView);
-		listview.setAdapter(new NotesArrayAdapter(this, R.layout.listview_item,list));
-
+		adapter = new NotesArrayAdapter(this, R.layout.listview_item,list);
+		listview.setAdapter(adapter);
+		
+		registerForContextMenu(listview);
+		
+		
 	}
 
 	@Override
@@ -107,4 +119,50 @@ public class Notes extends Activity {
 
 	}
 
+
+	//kontextove menu
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {
+	  if (v.getId()==R.id.notesListView) {
+	    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+//	    Toast.makeText(this, "Vybrana poznamka: " + notes.get(info.position), Toast.LENGTH_SHORT).show();
+	    noteToDelete = notes.get(info.position);
+	    menu.add(Menu.NONE, 0, 0, "Smazat");
+	    
+	  }
+	}
+	
+	
+	//kliknuti na kontextove menu
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+	  AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+	  int menuItemIndex = item.getItemId();
+	  
+	  DeleteNoteTask task = null;
+	  
+	  if (menuItemIndex == 0) {
+		  //mazene
+		  task = new DeleteNoteTask();
+		  task.execute(noteToDelete);
+	  }
+	  
+	  try {
+		task.get();
+		notes.remove(noteToDelete);
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (ExecutionException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	  
+	  
+	 adapter.notifyDataSetChanged();
+	  
+	  return true;
+	}
+	
+	
 }

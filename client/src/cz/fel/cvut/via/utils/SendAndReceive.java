@@ -6,8 +6,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 
+import cz.fel.cvut.via.entities.Note;
 import cz.fel.cvut.via.entities.User;
 
 public class SendAndReceive {
@@ -18,7 +21,7 @@ public class SendAndReceive {
 	public static String doInputOutput(String urlPart, Object data, String method) throws Exception {
 		try {
 			URL url = new URL(Utils.URL +  urlPart);
-
+			Log.d(SendAndReceive.class.getName(), "URL: " + Utils.URL +  urlPart);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			
 			con.setRequestMethod(method);
@@ -107,6 +110,107 @@ public class SendAndReceive {
 			String resp = response.toString();
 			
 			return resp;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		return null;
+	}
+	
+	public static String doInputOutputAuthenticated(String urlPart, Object data, String method) throws Exception {
+		try {
+			URL url = new URL(Utils.URL +  urlPart);
+			Log.d(SendAndReceive.class.getName(), "URL: " + Utils.URL +  urlPart);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			
+			con.setRequestMethod(method);
+			con.setRequestProperty("X-Token", Login.getLoggedUser().getToken());
+			con.setRequestProperty("Content-Type", "application/json");
+
+			// Send post request
+			con.setDoOutput(true);
+			con.setDoInput(true);
+			con.addRequestProperty("Accept", "application/json");
+			
+			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+			wr.writeBytes(gson.toJson(data));
+			System.out.println("JSON: " + gson.toJson(data));
+			wr.flush();
+			wr.close();			
+			
+			int responseCode = con.getResponseCode();
+
+			if (responseCode != 200) {
+				System.out.println("RESPONSE: " + responseCode);
+				throw new Exception("Chyba, odpoved neni 200!");
+			}
+			
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+
+			in.close();
+
+			String resp = response.toString();
+			
+			return resp;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		return null;
+	}
+	
+	public static String deleteNote(Note note, String token) throws Exception {
+		try {
+			URL url = new URL(Utils.URL +  "/" + Login.getLoggedUser().getUsername() + "/notes/" + note.getId());
+
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			
+			con.setRequestMethod("DELETE");
+			con.setRequestProperty("X-Token", token);
+//			con.setRequestProperty("Content-Type", "application/json");
+
+			// Send post request
+//			con.setDoOutput(true);
+//			con.setDoInput(true);
+//			con.addRequestProperty("Accept", "application/json");
+			
+//			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+//			wr.writeBytes(gson.toJson(data));
+//			System.out.println("JSON: " + gson.toJson(data));
+//			wr.flush();
+//			wr.close();			
+			
+			int responseCode = con.getResponseCode();
+			System.out.println("Response to Delete: " + responseCode);
+
+//			if (responseCode != 200) {
+//				System.out.println("RESPONSE: " + responseCode);
+//				throw new Exception("Chyba pri loginu, odpoved neni 200!");
+//			}
+//			
+//			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+//
+//			String inputLine;
+//			StringBuffer response = new StringBuffer();
+//
+//			while ((inputLine = in.readLine()) != null) {
+//				response.append(inputLine);
+//			}
+//
+//			in.close();
+//
+//			String resp = response.toString();
+//			
+//			return resp;
 
 		} catch (Exception e) {
 			e.printStackTrace();
