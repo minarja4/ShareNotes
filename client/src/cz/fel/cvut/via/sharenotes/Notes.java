@@ -5,15 +5,20 @@ import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,6 +38,12 @@ public class Notes extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_notes);
 
+		readNotesAndShow();
+		
+		
+	}
+
+	private void readNotesAndShow() {
 		// ziskame svoje poznamky
 		GetMyNotesTask g = new GetMyNotesTask();
 		//g.execute("pepik","a652c7e7312205c3db98dd931d541d1cd6e3e94259e48074ae4242d9a35d473f");
@@ -55,13 +66,25 @@ public class Notes extends Activity {
 		
 		// v list jsou ted vsechny poznamky usera
 		// zobrazit zatim v gridview
-		ListView listview = (ListView) findViewById(R.id.notesListView);
+		final ListView listview = (ListView) findViewById(R.id.notesListView);
 		adapter = new NotesArrayAdapter(this, R.layout.listview_item,list);
 		listview.setAdapter(adapter);
 		
 		registerForContextMenu(listview);
-		
-		
+		listview.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int pos,
+					long id) {
+				Note n = (Note) listview.getItemAtPosition(pos);
+				
+				Intent i = new Intent(view.getContext(), ShowNoteActivity.class);
+				i.putExtra("note", n);
+				
+				startActivity(i);
+				
+			}
+		});
 	}
 
 	@Override
@@ -120,6 +143,30 @@ public class Notes extends Activity {
 	}
 
 
+	//kliknuti na button v Actionbaru
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle presses on the action bar items
+	    switch (item.getItemId()) {
+	        case R.id.add_note_menu:
+	        	Log.d(Notes.class.getName(), "Starting addNote activity");
+	            Intent i = new Intent(this, AddNote.class);
+	            startActivity(i);
+	            return true;	        
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+	
+	//zakaz vraceni na LoginAtivity
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if ((keyCode == KeyEvent.KEYCODE_BACK)) { //Back key pressed	       
+	        return false;
+	    }
+	    return super.onKeyDown(keyCode, event);
+	}
+	
 	//kontextove menu
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {
@@ -135,8 +182,7 @@ public class Notes extends Activity {
 	
 	//kliknuti na kontextove menu
 	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-	  AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+	public boolean onContextItemSelected(MenuItem item) {	  
 	  int menuItemIndex = item.getItemId();
 	  
 	  DeleteNoteTask task = null;
@@ -164,5 +210,8 @@ public class Notes extends Activity {
 	  return true;
 	}
 	
+	public void refresh(View view) {
+		readNotesAndShow();
+	}
 	
 }

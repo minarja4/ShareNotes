@@ -1,6 +1,10 @@
 package cz.fel.cvut.via.entities;
 
-public class Note {
+import java.io.Serializable;
+
+import android.os.Parcelable;
+
+public class Note implements Serializable {
 
 	private int id;
 	private String name;
@@ -9,7 +13,7 @@ public class Note {
 //	private boolean shared;
 	private String owner;
 	
-	public Note(int id, String name, String note, int version, String owner) {
+	public Note(int id, String name, String note, int version, String owner){
 		
 		this.id = id;
 		this.name = name;

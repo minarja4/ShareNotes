@@ -218,5 +218,71 @@ public class SendAndReceive {
 	
 		return null;
 	}
+
+	public static String shareNote(Note note, String username, boolean readOnly, String token) throws Exception {
+		try {
+			URL url = new URL(Utils.URL +  "/" + Login.getLoggedUser().getUsername() + "/sharing/" + note.getId());
+
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			System.out.println(url);
+			con.setRequestMethod("POST");
+			con.setRequestProperty("X-Token", token);
+			con.setRequestProperty("Content-Type", "application/json");
+	
+			// Send post request
+			con.setDoOutput(true);
+//			con.setDoInput(true);
+			con.addRequestProperty("Accept", "application/json");
+			
+			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+			wr.writeBytes("[{\"username\":\""+ username +"\", \"readonly\":"+ (readOnly?1:0) +"}]");
+//			System.out.println("JSON: " + "{\"username\":\""+ username +"\", \"readonly\":0}");
+			wr.flush();
+			wr.close();	
+			
+			int responseCode = con.getResponseCode();
+			System.out.println("Response to share POST: " + responseCode);
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		return null;
+	}
+	
+	public static String editNote(Note note, String token) throws Exception {
+		try {
+			URL url = new URL(Utils.URL +  "/" + Login.getLoggedUser().getUsername() + "/notes/" + note.getId());
+
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			System.out.println(url);
+			con.setRequestMethod("PUT");
+			con.setRequestProperty("X-Token", token);
+			con.setRequestProperty("Content-Type", "application/json");
+	
+			// Send post request
+			con.setDoOutput(true);
+//			con.setDoInput(true);
+			con.addRequestProperty("Accept", "application/json");
+			
+			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+			wr.writeBytes(gson.toJson(note));
+//			wr.writeBytes("[{\"username\":\""+ username +"\", \"readonly\":"+ (readOnly?1:0) +"}]");
+//			System.out.println("JSON: " + "{\"username\":\""+ username +"\", \"readonly\":0}");
+			wr.flush();
+			wr.close();	
+			
+			int responseCode = con.getResponseCode();
+			System.out.println("Response to edit PUT: " + responseCode);
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		return null;
+	}
+	
 	
 }

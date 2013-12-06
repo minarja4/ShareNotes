@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".ShareNoteActivity" >
+
+    <EditText
+        android:id="@+id/shareToUsername"
+        android:hint="username komu sdilim"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="54dp"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/button1"        
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/shareToUsername"
+        android:layout_below="@+id/shareToUsername"
+        android:layout_marginRight="67dp"
+        android:layout_marginTop="53dp"
+        android:onClick="share"
+        android:text="Share" />
+
+    <TextView
+        android:id="@+id/shareNoteName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/checkBox1"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="41dp"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <CheckBox
+        android:id="@+id/shareReadOnly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/shareToUsername"
+        android:layout_marginLeft="39dp"
+        android:checked="true"
+        android:layout_toRightOf="@+id/shareToUsername"
+        android:text="Read only" />
+
+</RelativeLayout>
