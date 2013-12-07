@@ -62,8 +62,7 @@ public class RegisterActivity extends Activity {
 		
 			
 			Toast.makeText(this, "Uzivatel uspesne vytvoren", Toast.LENGTH_SHORT).show();
-			Intent i = new Intent(this, LoginActivity.class);
-			startActivity(i);
+			finish();
 			
 		} catch (InterruptedException e) {
 			Log.e(MainActivity.class.getName(), "Vytvareni uzivatele bylo preruseno.");
@@ -79,4 +78,10 @@ public class RegisterActivity extends Activity {
     	
     }
 
+	@Override
+	public void onBackPressed() {
+		setResult(22);
+		finish();
+	}
+    
 }

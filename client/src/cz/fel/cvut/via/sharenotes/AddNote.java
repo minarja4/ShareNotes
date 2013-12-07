@@ -43,9 +43,12 @@ public class AddNote extends Activity {
 		
 		task.get();
 		
-		
-		Intent i = new Intent(this, Notes.class);
-		startActivity(i);
+		finish();
+	}
+	
+	@Override
+	public void onBackPressed() {		
+		finish();
 	}
 	
 }

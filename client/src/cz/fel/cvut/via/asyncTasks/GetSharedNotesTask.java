@@ -3,25 +3,27 @@ package cz.fel.cvut.via.asyncTasks;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.os.AsyncTask;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import android.os.AsyncTask;
 import cz.fel.cvut.via.entities.Note;
+import cz.fel.cvut.via.entities.SharedNote;
 import cz.fel.cvut.via.utils.Login;
 import cz.fel.cvut.via.utils.SendAndReceive;
 
-public class GetMyNotesTask extends AsyncTask<String, Void, List<Note>>{
+public class GetSharedNotesTask extends AsyncTask<String, Void, List<SharedNote>>{
 
 	private Gson gson = new Gson();
 	
 	@Override
-	protected List<Note> doInBackground(String... params) {
+	protected List<SharedNote> doInBackground(String... params) {
 		String ret = null;
-		try {			
-			ret = SendAndReceive.getAllNotes(Login.getLoggedUser().getUsername(), Login.getLoggedUser().getToken());
+		try {
+			ret = SendAndReceive.getAllSharedNotes(Login.getLoggedUser().getUsername(), Login.getLoggedUser().getToken());
 			
-			List<Note> list = gson.fromJson(ret, new TypeToken<ArrayList<Note>>()
+			List<SharedNote> list = gson.fromJson(ret, new TypeToken<ArrayList<SharedNote>>()
 	                {
 	                }.getType());
 			return list;

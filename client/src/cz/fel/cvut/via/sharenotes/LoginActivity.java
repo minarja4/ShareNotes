@@ -65,6 +65,8 @@ public class LoginActivity extends Activity {
     		e.printStackTrace();
     	}
     	
+    	user.setText("");
+    	pass.setText("");
     	
     }
 	

@@ -1,34 +1,18 @@
 package cz.fel.cvut.via.sharenotes;
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-import cz.fel.cvut.via.asyncTasks.DeleteNoteTask;
-import cz.fel.cvut.via.asyncTasks.GetMyNotesTask;
-import cz.fel.cvut.via.entities.Note;
+import cz.fel.cvut.via.utils.Login;
 
 public class Notes extends FragmentActivity implements TabListener {
 
@@ -87,8 +71,12 @@ public class Notes extends FragmentActivity implements TabListener {
 	        case R.id.add_note_menu:
 	        	Log.d(Notes.class.getName(), "Starting addNote activity");
 	            Intent i = new Intent(this, AddNote.class);
-	            startActivity(i);
-	            return true;	        
+	            startActivityForResult(i,2);
+	            return true;	    
+	        case R.id.logout_menu:
+	        	Login.setLoggedUser(null);
+	        	finish();
+	        	return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }

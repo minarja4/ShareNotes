@@ -57,4 +57,10 @@ public class EditNoteActivity extends Activity {
 		
 	}
 
+	@Override
+	public void onBackPressed() {
+		setResult(22);
+		finish();
+	}
+	
 }

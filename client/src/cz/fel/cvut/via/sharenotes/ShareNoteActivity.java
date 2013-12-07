@@ -3,7 +3,6 @@ package cz.fel.cvut.via.sharenotes;
 import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -51,9 +50,14 @@ public class ShareNoteActivity extends Activity {
 		
 		Toast.makeText(this, "Nasdileno", Toast.LENGTH_SHORT).show();
 		
-		Intent i = new Intent(this, Notes.class);
-		startActivity(i);
+		finish();
 		
+	}
+	
+	@Override
+	public void onBackPressed() {
+		setResult(22);
+		finish();
 	}
 
 }

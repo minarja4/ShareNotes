@@ -6,7 +6,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_notes">Poznámky</string>
     <string name="title_activity_add_note">Přidat poznámku</string>
-    <string name="title_activity_login">Přihlásit</string>
+    <string name="title_activity_login">ShareNotes</string>
     <string name="title_activity_register">Zaregistrovat se</string>
     <string name="title_activity_show_note">Poznámka</string>
     <string name="title_activity_share_note">Sdílet poznámku</string>
@@ -15,5 +15,6 @@
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
+    <string name="title_activity_show_shared_note">ShowSharedNoteActivity</string>
 
 </resources>

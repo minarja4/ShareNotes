@@ -14,11 +14,9 @@ public class NotesFragmentAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int index) {
  
         switch (index) {
-        case 0:
-            // Top Rated fragment activity
+        case 0:            
             return new MyNotesFragment();
         case 1:
-            // Games fragment activity
             return new SharedNotesFragment();
 
         }

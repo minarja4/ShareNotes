@@ -1,4 +1,4 @@
-package cz.fel.cvut.via.sharenotes;
+ package cz.fel.cvut.via.sharenotes;
 
 
 import java.util.List;
@@ -20,17 +20,17 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import cz.fel.cvut.via.asyncTasks.DeleteNoteTask;
-import cz.fel.cvut.via.asyncTasks.GetMyNotesTask;
-import cz.fel.cvut.via.entities.Note;
+import cz.fel.cvut.via.asyncTasks.GetSharedNotesTask;
+import cz.fel.cvut.via.entities.SharedNote;
  
 public class SharedNotesFragment extends Fragment {
  
-	List<Note> sharedNotes = null;
-	Note noteToDelete = null;
+	List<SharedNote> sharedNotes = null;
+	SharedNote noteToDelete = null;
 	boolean mine = false;
 	
 	
-	NotesArrayAdapter adapter = null;
+	NotesArrayAdapter<SharedNote> adapter = null;
 	
 	View rootView = null;
 	
@@ -59,10 +59,10 @@ public class SharedNotesFragment extends Fragment {
 
 	private void readNotesAndShow(boolean mine) {
 		// ziskame svoje poznamky
-		GetMyNotesTask g = new GetMyNotesTask();
+		GetSharedNotesTask g = new GetSharedNotesTask();
 		
-		g.execute(mine?"mine":"shared");
-		List<Note> list = null;
+		g.execute();
+		List<SharedNote> list = null;
 		
 		
 		try {
@@ -82,7 +82,7 @@ public class SharedNotesFragment extends Fragment {
 		// zobrazit zatim v listview
 
 		final ListView listview = (ListView) rootView.findViewById(R.id.notesListViewShared);
-		adapter = new NotesArrayAdapter(getActivity(), R.layout.listview_item,list);
+		adapter = new NotesArrayAdapter<SharedNote>(getActivity(), R.layout.listview_item,list);
 		listview.setAdapter(adapter);
 		
 		registerForContextMenu(listview);
@@ -91,13 +91,12 @@ public class SharedNotesFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int pos,
 					long id) {
-				Note n = (Note) listview.getItemAtPosition(pos);
 				
-				Intent i = new Intent(view.getContext(), ShowNoteActivity.class);
-				i.putExtra("note", n);
-				i.putExtra("shared", true);
-				i.putExtra("readonly", true);
+				SharedNote n = (SharedNote) listview.getItemAtPosition(pos);
 				
+				
+				Intent i = new Intent(view.getContext(), ShowSharedNoteActivity.class);
+				i.putExtra("note", n);												
 				
 				startActivityForResult(i, 44);
 				
@@ -158,10 +157,10 @@ public class SharedNotesFragment extends Fragment {
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == 22) {
+//		if (resultCode == 22) {
 			//navrat z editace poznamky - refresh
 			readNotesAndShow(mine);
-		}
+//		}/
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 

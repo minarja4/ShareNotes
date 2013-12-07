@@ -30,7 +30,7 @@ public class MyNotesFragment extends Fragment {
 	boolean mine = true;
 	
 	
-	NotesArrayAdapter adapter = null;
+	NotesArrayAdapter<Note> adapter = null;
 	
 	View rootView = null;
 	
@@ -82,13 +82,13 @@ public class MyNotesFragment extends Fragment {
 		
 		// v list jsou ted vsechny poznamky usera
 		// zobrazit zatim v listview
-		System.out.println("tests: "); 
-		
-		System.out.println("getview: " + getActivity() );
-		System.out.println("id: " + rootView.findViewById(R.id.notesListView));
-		
+//		System.out.println("tests: "); 
+//		
+//		System.out.println("getview: " + getActivity() );
+//		System.out.println("id: " + rootView.findViewById(R.id.notesListView));
+//		
 		final ListView listview = (ListView) rootView.findViewById(R.id.notesListView);
-		adapter = new NotesArrayAdapter(getActivity(), R.layout.listview_item,list);
+		adapter = new NotesArrayAdapter<Note>(getActivity(), R.layout.listview_item,list);
 		listview.setAdapter(adapter);
 		
 		registerForContextMenu(listview);
@@ -161,10 +161,10 @@ public class MyNotesFragment extends Fragment {
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == 22) {
+//		if (resultCode == 22) {
 			//navrat z editace poznamky - refresh
-			readNotesAndShow(mine);
-		}
+		readNotesAndShow(mine);
+//		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 

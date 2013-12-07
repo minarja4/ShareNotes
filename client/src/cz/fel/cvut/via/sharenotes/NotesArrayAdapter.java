@@ -10,13 +10,13 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import cz.fel.cvut.via.entities.Note;
 
-public class NotesArrayAdapter extends ArrayAdapter<Note> {
+public class NotesArrayAdapter<T extends Note> extends ArrayAdapter<T> {
 
-		private List<Note> list = null;
+		private List<T> list = null;
 		private Context ctx;
 
 		public NotesArrayAdapter(Context context, int textViewResourceId,
-				List<Note> objects) {
+				List<T> objects) {
 			super(context, textViewResourceId);
 			this.list = objects;
 			ctx = context;
@@ -28,7 +28,8 @@ public class NotesArrayAdapter extends ArrayAdapter<Note> {
 		}
 
 		@Override
-		public Note getItem(int position) {
+		public T getItem(int position) {
+			System.out.println("TTTTTTTTTTTTTTTTTTTTT: ");
 			return list.get(position);
 		}
 
@@ -41,7 +42,7 @@ public class NotesArrayAdapter extends ArrayAdapter<Note> {
 			vi = LayoutInflater.from(ctx);
 			v = vi.inflate(R.layout.listview_item, null);
 
-			Note note = list.get(position);
+			T note = list.get(position);
 
 			if (note != null) {
 

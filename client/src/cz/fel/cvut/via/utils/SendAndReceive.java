@@ -13,7 +13,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import cz.fel.cvut.via.entities.Note;
-import cz.fel.cvut.via.entities.User;
 
 public class SendAndReceive {
 	private static Gson gson = new Gson();
@@ -46,13 +45,9 @@ public class SendAndReceive {
 	}
 
 	//send GET request and return String as a response
-	public static String getAllNotes(String username, String token, boolean mine) throws Exception {
+	public static String getAllNotes(String username, String token) throws Exception {
 		try {
-			URL url = null;
-			if (mine)
-				url = new URL(Utils.URL +  "/" + username + "/notes");
-			else
-				url = new URL(Utils.URL +  "/" + username + "/shared");
+			URL url = new URL(Utils.URL +  "/" + username + "/notes");			
 
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			
@@ -70,7 +65,26 @@ public class SendAndReceive {
 		return null;
 	}
 	
-	
+	    //send GET request and return String as a response
+		public static String getAllSharedNotes(String username, String token) throws Exception {
+			try {
+				URL url = new URL(Utils.URL +  "/" + username + "/shared");
+
+				HttpURLConnection con = (HttpURLConnection) url.openConnection();
+				
+				setConnectionParameters(token, con, "GET", true, false);
+
+				printResponse(con);
+
+				
+				return getResponse(con);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		
+			return null;
+		}
 	
 	public static String doInputOutputAuthenticated(String urlPart, Object data, String method, String token) throws Exception {
 		try {
@@ -171,10 +185,15 @@ public class SendAndReceive {
 	
 	
 	//update note
-	public static String editNote(Note note, String token, String username) throws Exception {
+	public static String editNote(Note note, String token, String username, boolean shared) throws Exception {
 		try {
-			URL url = new URL(Utils.URL +  "/" + username + "/notes/" + note.getId());
-
+			URL url = null;
+			
+			if (!shared)
+				url = new URL(Utils.URL +  "/" + username + "/notes/" + note.getId());
+			else
+				url = new URL(Utils.URL +  "/" + username + "/shared/" + note.getId());
+			
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			
 			setConnectionParameters(token, con, "PUT", true, false);

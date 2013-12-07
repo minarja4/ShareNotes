@@ -9,20 +9,21 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 import cz.fel.cvut.via.asyncTasks.DeleteNoteTask;
-import cz.fel.cvut.via.entities.Note;
 import cz.fel.cvut.via.entities.SharedNote;
 
-public class ShowNoteActivity extends Activity {
+public class ShowSharedNoteActivity extends Activity {
 
-	private Note actualNote = null;
+	private SharedNote actualNote = null;
+	private boolean readOnly = true;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_note);
 		
-		
-		actualNote = (Note) getIntent().getSerializableExtra("note");
+		actualNote = (SharedNote) getIntent().getSerializableExtra("note");
+		readOnly = actualNote.isReadonly();
 		
 		setContent();
 		
@@ -31,7 +32,11 @@ public class ShowNoteActivity extends Activity {
 	
 	
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {				
+	public boolean onPrepareOptionsMenu(Menu menu) {		
+		menu.removeItem(R.id.share_note_menu);
+		if (readOnly)
+			menu.removeItem(R.id.edit_note_menu);
+		
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -43,7 +48,9 @@ public class ShowNoteActivity extends Activity {
 		
 		name.setText(actualNote.getName());
 		desc.setText(actualNote.getNote());
-		
+			
+		Toast.makeText(this, actualNote.isReadonly()+ " readonly", Toast.LENGTH_LONG).show();
+	
 	}
 
 	@Override
@@ -65,19 +72,15 @@ public class ShowNoteActivity extends Activity {
 	            
 	        	DeleteNoteTask task = null;
 	      	  
-	      	    //mazene
+	      	    //mazeme
 	      		  task = new DeleteNoteTask();
 	      		  task.execute(actualNote);
 	      		  
-	      		  finish();
+	      		  Intent i = new Intent(this,Notes.class);
+	      		  startActivity(i);
 	      		  
 	            return true;
-	            
-	        case R.id.share_note_menu:
-	        	Intent in = new Intent(this, ShareNoteActivity.class);
-	        	in.putExtra("note", actualNote);
-	        	startActivityForResult(in,11);
-	        	return true;
+	            	       
 	        case R.id.edit_note_menu:
 	        	Intent inte = new Intent(this, EditNoteActivity.class);
 	        	inte.putExtra("note", actualNote);
@@ -91,13 +94,14 @@ public class ShowNoteActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == 1) {			
-			actualNote = (Note) data.getSerializableExtra("editedNote");
+			actualNote = (SharedNote) data.getSerializableExtra("editedNote");
 			Log.d(ShowNoteActivity.class.getName(), "New note name: " + actualNote.getName());
 			setContent();					
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-
+		
+	
 	@Override
 	public void onBackPressed() {
 		setResult(22);
