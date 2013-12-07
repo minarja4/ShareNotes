@@ -55,4 +55,18 @@ public class Transformer {
         json.setReadonly(share.getReadonly());
         return json;
     }
+
+    public static JsonNote sharedTransform(Share shared) {
+        JsonNote note = transform(shared.getNote());
+        note.setReadonly(shared.getReadonly());
+        return note;
+    }
+
+    public static List<JsonNote> sharedTransform(List<Share> allShared) {
+        List<JsonNote> out = new ArrayList<JsonNote>();
+        for (Share shared : allShared) {
+            out.add(sharedTransform(shared));
+        }
+        return out;
+    }
 }
