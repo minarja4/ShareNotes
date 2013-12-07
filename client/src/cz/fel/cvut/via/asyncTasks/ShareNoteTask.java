@@ -11,7 +11,7 @@ public class ShareNoteTask extends AsyncTask<Carry, Void, Void>{
 	protected Void doInBackground(Carry... params) {
 		
 		try {
-			SendAndReceive.shareNote(params[0].getNote(), params[0].getUsername(), params[0].isReadOnly(), Login.getLoggedUser().getToken());
+			SendAndReceive.shareNote(params[0].getNote(), params[0].getUsername(), params[0].isReadOnly(), Login.getLoggedUser().getToken(), Login.getLoggedUser().getUsername());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

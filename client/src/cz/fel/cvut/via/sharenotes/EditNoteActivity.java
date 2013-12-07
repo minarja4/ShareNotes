@@ -50,7 +50,10 @@ public class EditNoteActivity extends Activity {
 		Toast.makeText(this, "Poznamka upravena", Toast.LENGTH_SHORT).show();
 		
 		Intent i = new Intent(this, Notes.class);
-		startActivity(i);
+		i.putExtra("editedNote", editedNote);
+//		startActivity(i);
+		setResult(1, i);
+		finish();
 		
 	}
 

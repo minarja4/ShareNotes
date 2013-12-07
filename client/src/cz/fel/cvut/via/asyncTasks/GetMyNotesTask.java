@@ -19,7 +19,11 @@ public class GetMyNotesTask extends AsyncTask<String, Void, List<Note>>{
 	protected List<Note> doInBackground(String... params) {
 		String ret = null;
 		try {
-			ret = SendAndReceive.getAllNotes(Login.getLoggedUser().getUsername(), Login.getLoggedUser().getToken());
+			boolean mine = true;
+			
+			if (params[0].equals("shared")) mine = false;
+			
+			ret = SendAndReceive.getAllNotes(Login.getLoggedUser().getUsername(), Login.getLoggedUser().getToken(), mine);
 			
 			List<Note> list = gson.fromJson(ret, new TypeToken<ArrayList<Note>>()
 	                {

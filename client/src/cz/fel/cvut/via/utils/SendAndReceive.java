@@ -2,8 +2,10 @@ package cz.fel.cvut.via.utils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 
 import android.util.Log;
@@ -21,16 +23,10 @@ public class SendAndReceive {
 	public static String doInputOutput(String urlPart, Object data, String method) throws Exception {
 		try {
 			URL url = new URL(Utils.URL +  urlPart);
-			Log.d(SendAndReceive.class.getName(), "URL: " + Utils.URL +  urlPart);
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-			
-			con.setRequestMethod(method);
-			con.setRequestProperty("Content-Type", "application/json");
 
-			// Send post request
-			con.setDoOutput(true);
-			con.setDoInput(true);
-			con.addRequestProperty("Accept", "application/json");
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+			setConnectionParameters(null, con, method, true, true);
 			
 			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 			wr.writeBytes(gson.toJson(data));
@@ -38,27 +34,9 @@ public class SendAndReceive {
 			wr.flush();
 			wr.close();			
 			
-			int responseCode = con.getResponseCode();
-
-			if (responseCode != 200) {
-				System.out.println("RESPONSE: " + responseCode);
-				throw new Exception("Chyba, odpoved neni 200!");
-			}
+			printResponse(con);
 			
-			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-			String inputLine;
-			StringBuffer response = new StringBuffer();
-
-			while ((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
-			}
-
-			in.close();
-
-			String resp = response.toString();
-			
-			return resp;
+			return getResponse(con);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -68,48 +46,22 @@ public class SendAndReceive {
 	}
 
 	//send GET request and return String as a response
-	public static String getAllNotes(String username, String token) throws Exception {
+	public static String getAllNotes(String username, String token, boolean mine) throws Exception {
 		try {
-			URL url = new URL(Utils.URL +  "/" + username + "/notes");
+			URL url = null;
+			if (mine)
+				url = new URL(Utils.URL +  "/" + username + "/notes");
+			else
+				url = new URL(Utils.URL +  "/" + username + "/shared");
 
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			
-			con.setRequestMethod("GET");
-			con.setRequestProperty("X-Token", token);
-//			con.setRequestProperty("Content-Type", "application/json");
+			setConnectionParameters(token, con, "GET", true, false);
 
-			// Send post request
-//			con.setDoOutput(true);
-			con.setDoInput(true);
-			con.addRequestProperty("Accept", "application/json");
+			printResponse(con);
+
 			
-//			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-//			wr.writeBytes(gson.toJson(data));
-//			System.out.println("JSON: " + gson.toJson(data));
-//			wr.flush();
-//			wr.close();			
-			
-			int responseCode = con.getResponseCode();
-
-			if (responseCode != 200) {
-				System.out.println("RESPONSE: " + responseCode);
-				throw new Exception("Chyba pri loginu, odpoved neni 200!");
-			}
-			
-			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-			String inputLine;
-			StringBuffer response = new StringBuffer();
-
-			while ((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
-			}
-
-			in.close();
-
-			String resp = response.toString();
-			
-			return resp;
+			return getResponse(con);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -118,48 +70,27 @@ public class SendAndReceive {
 		return null;
 	}
 	
-	public static String doInputOutputAuthenticated(String urlPart, Object data, String method) throws Exception {
+	
+	
+	public static String doInputOutputAuthenticated(String urlPart, Object data, String method, String token) throws Exception {
 		try {
 			URL url = new URL(Utils.URL +  urlPart);
-			Log.d(SendAndReceive.class.getName(), "URL: " + Utils.URL +  urlPart);
+			
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			
-			con.setRequestMethod(method);
-			con.setRequestProperty("X-Token", Login.getLoggedUser().getToken());
-			con.setRequestProperty("Content-Type", "application/json");
 
-			// Send post request
-			con.setDoOutput(true);
-			con.setDoInput(true);
-			con.addRequestProperty("Accept", "application/json");
+			setConnectionParameters(token, con, method, true, true);
 			
 			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 			wr.writeBytes(gson.toJson(data));
-			System.out.println("JSON: " + gson.toJson(data));
 			wr.flush();
 			wr.close();			
 			
-			int responseCode = con.getResponseCode();
-
-			if (responseCode != 200) {
-				System.out.println("RESPONSE: " + responseCode);
-				throw new Exception("Chyba, odpoved neni 200!");
-			}
+			printResponse(con);
 			
-			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-			String inputLine;
-			StringBuffer response = new StringBuffer();
-
-			while ((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
-			}
-
-			in.close();
-
-			String resp = response.toString();
 			
-			return resp;
+			//response
+			return getResponse(con);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -167,50 +98,45 @@ public class SendAndReceive {
 	
 		return null;
 	}
-	
-	public static String deleteNote(Note note, String token) throws Exception {
-		try {
-			URL url = new URL(Utils.URL +  "/" + Login.getLoggedUser().getUsername() + "/notes/" + note.getId());
 
+	private static String getResponse(HttpURLConnection con) throws IOException {
+		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+		}
+
+		in.close();
+
+		String resp = response.toString();
+		
+		return resp;
+	}
+	
+	
+	//delete note or remove from shared with me
+	public static String deleteNote(Note note, String token, String username, boolean shared) throws Exception {
+		try {
+			URL url = null;
+			
+			if(!shared)
+				url  = new URL(Utils.URL +  "/" + username + "/notes/" + note.getId());
+			else
+				url = new URL(Utils.URL +  "/" + username + "/shared/" + note.getId());
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			
 			con.setRequestMethod("DELETE");
 			con.setRequestProperty("X-Token", token);
-//			con.setRequestProperty("Content-Type", "application/json");
 
-			// Send post request
-//			con.setDoOutput(true);
-//			con.setDoInput(true);
-//			con.addRequestProperty("Accept", "application/json");
-			
-//			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-//			wr.writeBytes(gson.toJson(data));
-//			System.out.println("JSON: " + gson.toJson(data));
-//			wr.flush();
-//			wr.close();			
+			setConnectionParameters(token, con, "DELETE", false, false);
 			
 			int responseCode = con.getResponseCode();
 			System.out.println("Response to Delete: " + responseCode);
 
-//			if (responseCode != 200) {
-//				System.out.println("RESPONSE: " + responseCode);
-//				throw new Exception("Chyba pri loginu, odpoved neni 200!");
-//			}
-//			
-//			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-//
-//			String inputLine;
-//			StringBuffer response = new StringBuffer();
-//
-//			while ((inputLine = in.readLine()) != null) {
-//				response.append(inputLine);
-//			}
-//
-//			in.close();
-//
-//			String resp = response.toString();
-//			
-//			return resp;
+
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -219,30 +145,22 @@ public class SendAndReceive {
 		return null;
 	}
 
-	public static String shareNote(Note note, String username, boolean readOnly, String token) throws Exception {
+	//share note to another user
+	public static String shareNote(Note note, String shareToUsername, boolean readOnly, String token, String username) throws Exception {
 		try {
-			URL url = new URL(Utils.URL +  "/" + Login.getLoggedUser().getUsername() + "/sharing/" + note.getId());
+			URL url = new URL(Utils.URL +  "/" + username + "/sharing/" + note.getId());
 
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-			System.out.println(url);
-			con.setRequestMethod("POST");
-			con.setRequestProperty("X-Token", token);
-			con.setRequestProperty("Content-Type", "application/json");
 	
-			// Send post request
-			con.setDoOutput(true);
-//			con.setDoInput(true);
-			con.addRequestProperty("Accept", "application/json");
+			setConnectionParameters(token, con, "POST", false, true);
 			
 			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-			wr.writeBytes("[{\"username\":\""+ username +"\", \"readonly\":"+ (readOnly?1:0) +"}]");
-//			System.out.println("JSON: " + "{\"username\":\""+ username +"\", \"readonly\":0}");
+			wr.writeBytes("[{\"username\":\""+ shareToUsername +"\", \"readonly\":"+ (readOnly?1:0) +"}]");
+
 			wr.flush();
 			wr.close();	
 			
-			int responseCode = con.getResponseCode();
-			System.out.println("Response to share POST: " + responseCode);
-
+			printResponse(con);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -251,30 +169,23 @@ public class SendAndReceive {
 		return null;
 	}
 	
-	public static String editNote(Note note, String token) throws Exception {
+	
+	//update note
+	public static String editNote(Note note, String token, String username) throws Exception {
 		try {
-			URL url = new URL(Utils.URL +  "/" + Login.getLoggedUser().getUsername() + "/notes/" + note.getId());
+			URL url = new URL(Utils.URL +  "/" + username + "/notes/" + note.getId());
 
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-			System.out.println(url);
-			con.setRequestMethod("PUT");
-			con.setRequestProperty("X-Token", token);
-			con.setRequestProperty("Content-Type", "application/json");
-	
-			// Send post request
-			con.setDoOutput(true);
-//			con.setDoInput(true);
-			con.addRequestProperty("Accept", "application/json");
+			
+			setConnectionParameters(token, con, "PUT", true, false);
 			
 			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 			wr.writeBytes(gson.toJson(note));
-//			wr.writeBytes("[{\"username\":\""+ username +"\", \"readonly\":"+ (readOnly?1:0) +"}]");
-//			System.out.println("JSON: " + "{\"username\":\""+ username +"\", \"readonly\":0}");
+
 			wr.flush();
 			wr.close();	
 			
-			int responseCode = con.getResponseCode();
-			System.out.println("Response to edit PUT: " + responseCode);
+			printResponse(con);
 
 
 		} catch (Exception e) {
@@ -283,6 +194,31 @@ public class SendAndReceive {
 	
 		return null;
 	}
+
+	private static void printResponse(HttpURLConnection con) throws IOException {
+		int responseCode = con.getResponseCode();
+		Log.d(SendAndReceive.class.getCanonicalName(), "Response: " + responseCode);
+	}
+
+	private static void setConnectionParameters(String token, HttpURLConnection con, String method, boolean input, boolean output) throws ProtocolException {
+		Log.d(SendAndReceive.class.getCanonicalName(), "URL: " + con.getURL().toString());
+		
+		con.setRequestMethod(method);
+		
+		if (token != null)
+			con.setRequestProperty("X-Token", token);
+		
+		
+		con.setRequestProperty("Content-Type", "application/json");
+		con.addRequestProperty("Accept", "application/json");
+		
+		// Send post request		
+		con.setDoOutput(output);
+		con.setDoInput(input);
+		
+	}
+	
+	
 	
 	
 }

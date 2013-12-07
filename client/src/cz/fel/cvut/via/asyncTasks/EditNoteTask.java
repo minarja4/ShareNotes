@@ -10,7 +10,7 @@ public class EditNoteTask extends AsyncTask<Note, Void, Void> {
 	@Override
 	protected Void doInBackground(Note... arg0) {
 		try {
-			SendAndReceive.editNote(arg0[0], Login.getLoggedUser().getToken());
+			SendAndReceive.editNote(arg0[0], Login.getLoggedUser().getToken(), Login.getLoggedUser().getUsername());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

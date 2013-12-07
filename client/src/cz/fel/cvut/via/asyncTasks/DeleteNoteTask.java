@@ -10,7 +10,7 @@ public class DeleteNoteTask extends AsyncTask<Note, Void, Void> {
 	@Override
 	protected Void doInBackground(Note... params) {
 		try {
-			SendAndReceive.deleteNote(params[0], Login.getLoggedUser().getToken());
+			SendAndReceive.deleteNote(params[0], Login.getLoggedUser().getToken(), Login.getLoggedUser().getUsername(), !params[0].getOwner().equals(Login.getLoggedUser().getUsername()));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

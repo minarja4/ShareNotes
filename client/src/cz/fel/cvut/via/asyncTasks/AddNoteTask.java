@@ -12,7 +12,7 @@ public class AddNoteTask extends AsyncTask<Note,Void, Note> {
 	protected Note doInBackground(Note... arg0) {
 	
 		try {
-			SendAndReceive.doInputOutputAuthenticated("/" + Login.getLoggedUser().getUsername() + "/notes/", arg0[0], "POST");
+			SendAndReceive.doInputOutputAuthenticated("/" + Login.getLoggedUser().getUsername() + "/notes/", arg0[0], "POST", Login.getLoggedUser().getToken());
 		} catch (Exception e) {
 			Log.e(AddNoteTask.class.getName(), "Chyba pri vytvareni poznamky.");
 			e.printStackTrace();
