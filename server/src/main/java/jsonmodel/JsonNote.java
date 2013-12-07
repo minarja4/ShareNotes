@@ -14,6 +14,7 @@ public class JsonNote {
     private String name;
     private String note;
     private JsonUser owner;
+    private Boolean readonly;
 
     public JsonNote() {
     }
@@ -75,5 +76,16 @@ public class JsonNote {
     @JsonDeserialize(using = UserDeserializer.class)
     public void setOwner(JsonUser owner) {
         this.owner = owner;
+    }
+
+    @JsonProperty("readonly")
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+    public Boolean getReadonly() {
+        return readonly;
+    }
+
+    @JsonIgnore
+    public void setReadonly(Boolean readonly) {
+        this.readonly = readonly;
     }
 }

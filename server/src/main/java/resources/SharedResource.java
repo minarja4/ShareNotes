@@ -14,7 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import jsonmodel.JsonNote;
 import jsonmodel.Transformer;
-import model.Note;
+import model.Share;
 import model.User;
 import utils.SecurityUtil;
 
@@ -38,7 +38,7 @@ public class SharedResource {
     public List<JsonNote> shared(@PathParam("username") String username,
             @HeaderParam("X-Token") String token) {
         User user = SecurityUtil.checkToken(username, token);
-        return Transformer.notesTransform(new ShareDAO().allShared(user));
+        return Transformer.sharedTransform(new ShareDAO().allShared(user));
     }
 
     /**
@@ -52,7 +52,8 @@ public class SharedResource {
             @HeaderParam("X-Token") String token,
             @PathParam("noteId") int noteId) {
         User user = SecurityUtil.checkToken(username, token);
-        return Transformer.transform(SecurityUtil.canReadNote(user, noteId));
+        Share shared = SecurityUtil.canReadNote(user, noteId);
+        return Transformer.sharedTransform(shared);
     }
 
     /**
@@ -84,7 +85,7 @@ public class SharedResource {
             @HeaderParam("X-Token") String token,
             @PathParam("noteId") int noteId) {
         User user = SecurityUtil.checkToken(username, token);
-        Note note = SecurityUtil.canReadNote(user, noteId);
-        new ShareDAO().signoff(user, note);
+        Share shared = SecurityUtil.canReadNote(user, noteId);
+        new ShareDAO().signoff(user, shared.getNote());
     }
 }

@@ -31,16 +31,13 @@ public class ShareDAO extends AbstractDAO<Share, JsonAccess> {
         return notes;
     }
 
-    public List<Note> allShared(User user) {
-        List<Note> notes = new ArrayList<Note>();
+    public List<Share> allShared(User user) {
+        List<Share> notes = new ArrayList<Share>();
         try {
             Transaction tx = session.beginTransaction();
             Criteria criteria = session.createCriteria(Share.class)
                     .add(Restrictions.eq("user", user));
-
-            for (Share s : (List<Share>) criteria.list()) {
-                notes.add(s.getNote());
-            }
+            notes = (List<Share>) criteria.list();
             tx.commit();
         } catch (HibernateException e) {
             throw new BadRequestException("Hibernate exception: " + e.getMessage());

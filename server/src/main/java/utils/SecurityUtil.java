@@ -27,8 +27,8 @@ public class SecurityUtil {
         return note;
     }
 
-    public static Note canReadNote(User user, int noteId) {
-        return new ShareDAO().byUserNote(user.getId(), noteId).getNote();
+    public static Share canReadNote(User user, int noteId) {
+        return new ShareDAO().byUserNote(user.getId(), noteId);
     }
 
     public static Note canWriteNote(User user, int noteId) {
