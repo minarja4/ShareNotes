@@ -6,12 +6,16 @@ import java.security.NoSuchAlgorithmException;
 import javax.security.auth.login.LoginException;
 
 import cz.fel.cvut.via.asyncTasks.LoginTask;
+import cz.fel.cvut.via.db.login.GetUserFromDB;
+import cz.fel.cvut.via.db.login.InsertLogin;
 import cz.fel.cvut.via.entities.User;
 import cz.fel.cvut.via.utils.Login;
 import cz.fel.cvut.via.utils.Utils;
-
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
@@ -45,25 +49,55 @@ public class LoginActivity extends Activity {
     	
 //    	Toast.makeText(this, "Overuji uzivatele...", Toast.LENGTH_SHORT).show();
     	
-    	try {
-    		LoginTask loginTask = new LoginTask();
-    		loginTask.execute(u);
-    		loginTask.get(); //wait for login to finish
+    	//jsme online?
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		 
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		boolean isConnected = activeNetwork != null && activeNetwork.isConnected();
+    	
+    	if (isConnected) {
+	    	try {
+	    		LoginTask loginTask = new LoginTask();
+	    		loginTask.execute(u);
+	    		loginTask.get(); //wait for login to finish
+	    		
+	    		if (Login.getLoggedUser().getToken() == null)
+	    			throw new LoginException("Chyba");
+	    		
+	    		
+	    		
+	    		Toast.makeText(this, "User zalogovan: " + Login.getLoggedUser().getToken(), Toast.LENGTH_LONG).show();
+	    		
+	    		//vlozeni udaju do DB    		
+	    		InsertLogin.save(this, Login.getLoggedUser());
+	    		
+	    		Intent i = new Intent(this, Notes.class);
+	    		startActivity(i);
+	    		    		
+	    	} catch (Exception e) {
+	    		Toast.makeText(this, "Chyba pri loginu", Toast.LENGTH_LONG).show();
+	    		e.printStackTrace();
+	    	}
+    	}else {
+    		//offline overeni
+    		String token = GetUserFromDB.getAllNotesForUser(u.getUsername(), u.getPassword(), this);
+    		if (token.isEmpty()) {
+    			Toast.makeText(this, "Chyba pri lokalnim overovani", Toast.LENGTH_SHORT).show();
+    		} else {
+    			
+    			u.setToken(token);
+    			Login.setLoggedUser(u);
+    			Toast.makeText(this, "Uzivatel overen lokalne", Toast.LENGTH_SHORT).show();
+    			Intent i = new Intent(this, Notes.class);
+	    		startActivity(i);
+    		}
     		
-    		if (Login.getLoggedUser().getToken() == null)
-    			throw new LoginException("Chyba");
-    		
-    		
-    		
-    		Toast.makeText(this, "User zalogovan: " + Login.getLoggedUser().getToken(), Toast.LENGTH_LONG).show();
-    		Intent i = new Intent(this, Notes.class);
-    		startActivity(i);
-    		
-    		
-    	} catch (Exception e) {
-    		Toast.makeText(this, "Chyba pri loginu", Toast.LENGTH_LONG).show();
-    		e.printStackTrace();
     	}
+    	
+    	
+    	
+    	
+    	
     	
     	user.setText("");
     	pass.setText("");

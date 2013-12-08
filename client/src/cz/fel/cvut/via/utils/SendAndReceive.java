@@ -237,7 +237,46 @@ public class SendAndReceive {
 		
 	}
 	
+	//send GET request and return String as a response
+	public static String getAllMySharedNotes(String username, String token) throws Exception {
+		try {
+			URL url = new URL(Utils.URL +  "/" + username + "/sharing");
+
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			
+			setConnectionParameters(token, con, "GET", true, false);
+
+			printResponse(con);
+
+			
+			return getResponse(con);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	
+		return null;
+	}
 	
+    //send GET request and return String as a response
+	public static String getSharesToNote(Note n, String username, String token) throws Exception {
+		try {
+			URL url = new URL(Utils.URL +  "/" + username + "/sharing/" + n.getId());
+
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			
+			setConnectionParameters(token, con, "GET", true, false);
+
+			printResponse(con);
+
+			
+			return getResponse(con);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		return null;
+	}
 	
 }

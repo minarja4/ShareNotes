@@ -1,10 +1,14 @@
  package cz.fel.cvut.via.sharenotes;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
@@ -58,24 +62,33 @@ public class SharedNotesFragment extends Fragment {
     
 
 	private void readNotesAndShow(boolean mine) {
-		// ziskame svoje poznamky
-		GetSharedNotesTask g = new GetSharedNotesTask();
+		// ziskame sdilene poznamky - pokud jsme online
+		//jsme online?
+		ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		 
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		boolean isConnected = activeNetwork != null && activeNetwork.isConnected();
+	
+		List<SharedNote> list = new ArrayList<SharedNote>();
 		
-		g.execute();
-		List<SharedNote> list = null;
-		
-		
-		try {
-			list = g.get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (isConnected) {
+			GetSharedNotesTask g = new GetSharedNotesTask();
+			
+			g.execute();
+			
+			try {
+				list = g.get();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
+		} else {
+			list.add(new SharedNote(1, "OFFLINE", "Jste v rezimu Offline", 1, "", true));
 		}
-
-		
 		sharedNotes = list;
 		
 		// v list jsou ted vsechny poznamky usera

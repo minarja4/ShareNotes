@@ -2,14 +2,19 @@ package cz.fel.cvut.via.sharenotes;
 
 import java.util.concurrent.ExecutionException;
 
-import cz.fel.cvut.via.asyncTasks.AddNoteTask;
-import cz.fel.cvut.via.entities.Note;
 import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+import cz.fel.cvut.via.asyncTasks.AddNoteTask;
+import cz.fel.cvut.via.db.notes.SaveNoteToDB;
+import cz.fel.cvut.via.entities.Note;
+import cz.fel.cvut.via.utils.Login;
 
 public class AddNote extends Activity {
 
@@ -37,15 +42,27 @@ public class AddNote extends Activity {
 		Note n = new Note();
 		n.setName(name);
 		n.setNote(note);
+		n.setOwner(Login.getLoggedUser().getUsername());
 		
-		AddNoteTask task = new AddNoteTask();
-		task.execute(n);
+		//jsme online?
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		 
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		boolean isConnected = activeNetwork != null && activeNetwork.isConnected();
 		
-		task.get();
+		if (isConnected) {		
+			AddNoteTask task = new AddNoteTask();
+			task.execute(n);			
+			task.get();			
+			Toast.makeText(this, "Poznamka ulozena na server", Toast.LENGTH_SHORT).show();
+		} else{
+			SaveNoteToDB.save(this, n);			
+			Toast.makeText(this, "Poznamka ulozena LOKALNE", Toast.LENGTH_SHORT).show();
+		}
 		
 		finish();
 	}
-	
+	                                                                                                                                                                                                                                                  
 	@Override
 	public void onBackPressed() {		
 		finish();

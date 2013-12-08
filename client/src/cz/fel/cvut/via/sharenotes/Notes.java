@@ -1,8 +1,12 @@
 package cz.fel.cvut.via.sharenotes;
 
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +16,13 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+import cz.fel.cvut.via.asyncTasks.AddMultipleNotesTask;
+import cz.fel.cvut.via.db.notes.DeleteNoteFromDB;
+import cz.fel.cvut.via.db.notes.ReadNotes;
+import cz.fel.cvut.via.entities.Note;
 import cz.fel.cvut.via.utils.Login;
+import cz.fel.cvut.via.utils.Utils;
 
 public class Notes extends FragmentActivity implements TabListener {
 
@@ -77,9 +87,51 @@ public class Notes extends FragmentActivity implements TabListener {
 	        	Login.setLoggedUser(null);
 	        	finish();
 	        	return true;
+	        case R.id.synchronize_menu:			
+				try {
+					synchronize();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}			
+	        	return true;
+	        case R.id.show_my_shared_menu:
+	        	Intent hh = new Intent(this, MySharedNotesActivity.class);
+	        	startActivityForResult(hh, 11);
+	        	return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
+	}
+	
+	
+	//odeslat ulozene poznamky na server
+	private void synchronize() throws InterruptedException, ExecutionException {
+		if(Utils.isConnected(this)) {
+			
+			List<Note> cachedNotes = ReadNotes.getAllNotesForUser(Login.getLoggedUser().getUsername(), this);
+			
+			AddMultipleNotesTask task = new AddMultipleNotesTask();
+			
+			task.execute(cachedNotes);
+			task.get();
+	
+			Toast.makeText(this, "Pocet ulozenych poznamek: " + cachedNotes.size(), Toast.LENGTH_SHORT).show();
+			
+			for(Note g : cachedNotes) {
+				DeleteNoteFromDB.deleteFromDBByLocalId(g, this);
+			}
+		} else
+			Toast.makeText(this, "Chyba pri synchronizaci", Toast.LENGTH_SHORT).show();
+		
+			
+			//		MyNotesFragment f = (MyNotesFragment) mAdapter.getItem(0);
+//		f.readNotesAndShow(true);
+		
+		
 	}
 	
 	

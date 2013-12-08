@@ -3,6 +3,8 @@ package cz.fel.cvut.via.sharenotes;
 import java.util.List;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +30,7 @@ public class NotesArrayAdapter<T extends Note> extends ArrayAdapter<T> {
 		}
 
 		@Override
-		public T getItem(int position) {
-			System.out.println("TTTTTTTTTTTTTTTTTTTTT: ");
+		public T getItem(int position) {			
 			return list.get(position);
 		}
 
@@ -49,6 +50,12 @@ public class NotesArrayAdapter<T extends Note> extends ArrayAdapter<T> {
 				TextView title = (TextView) v.findViewById(R.id.noteTitle);
 				TextView desc = (TextView) v.findViewById(R.id.noteDesc);
 
+				if (note.isCached()) {
+					//kesovane poznamky maji jinou barvu
+					title.setTextColor(ColorStateList.valueOf(Color.GREEN));
+					desc.setBackgroundColor(Color.BLUE);
+				}
+				
 				title.setText(note.getName());
 				desc.setText(note.getNote());
 

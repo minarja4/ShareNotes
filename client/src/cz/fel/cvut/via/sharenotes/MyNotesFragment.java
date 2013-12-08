@@ -1,10 +1,14 @@
 package cz.fel.cvut.via.sharenotes;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
@@ -21,7 +25,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import cz.fel.cvut.via.asyncTasks.DeleteNoteTask;
 import cz.fel.cvut.via.asyncTasks.GetMyNotesTask;
+import cz.fel.cvut.via.db.notes.DeleteNoteFromDB;
+import cz.fel.cvut.via.db.notes.ReadNotes;
 import cz.fel.cvut.via.entities.Note;
+import cz.fel.cvut.via.utils.Login;
  
 public class MyNotesFragment extends Fragment {
  
@@ -59,26 +66,44 @@ public class MyNotesFragment extends Fragment {
     }
     
 
-	private void readNotesAndShow(boolean mine) {
-		// ziskame svoje poznamky
-		GetMyNotesTask g = new GetMyNotesTask();
-		//g.execute("pepik","a652c7e7312205c3db98dd931d541d1cd6e3e94259e48074ae4242d9a35d473f");
-		g.execute(mine?"true":"false");
+	protected void readNotesAndShow(boolean mine) {
+		// ziskame svoje poznamky - pokud jsme online
+		//jsme online?
+		ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		 
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		boolean isConnected = activeNetwork != null && activeNetwork.isConnected();
+		
 		List<Note> list = null;
 		
-		
-		try {
-			list = g.get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (isConnected) {
+			GetMyNotesTask g = new GetMyNotesTask();
+			//g.execute("pepik","a652c7e7312205c3db98dd931d541d1cd6e3e94259e48074ae4242d9a35d473f");
+			g.execute(mine?"true":"false");
+			
+			
+			
+			try {
+				list = g.get();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			notes = list;
 		}
-
 		
-		notes = list;
+				
+		//pridam jeste cachovane poznamky z lokalni DB
+		List<Note> cachedNotes = ReadNotes.getAllNotesForUser(Login.getLoggedUser().getUsername(), getActivity());
+		
+		if (list == null) 
+			list = new ArrayList<Note>();
+		
+		list.addAll(cachedNotes);
 		
 		// v list jsou ted vsechny poznamky usera
 		// zobrazit zatim v listview
@@ -99,11 +124,12 @@ public class MyNotesFragment extends Fragment {
 					long id) {
 				Note n = (Note) listview.getItemAtPosition(pos);
 				
-				Intent i = new Intent(view.getContext(), ShowNoteActivity.class);
-				i.putExtra("note", n);
-				
-				startActivityForResult(i, 22);
-				
+				if (!n.isCached()){
+					Intent i = new Intent(view.getContext(), ShowNoteActivity.class);
+					i.putExtra("note", n);
+					
+					startActivityForResult(i, 22);
+			}
 			}
 		});
 	}
@@ -136,21 +162,19 @@ public class MyNotesFragment extends Fragment {
 	  DeleteNoteTask task = null;
 	  
 	  if (menuItemIndex == 0) {
-		  //mazene
-		  task = new DeleteNoteTask();
-		  task.execute(noteToDelete);
+		  if (!noteToDelete.isCached()) {
+			  //mazene
+			  task = new DeleteNoteTask();
+			  task.execute(noteToDelete);
+		  }else {
+			  DeleteNoteFromDB.deleteFromDBByLocalId(noteToDelete, getActivity());			  
+		  }
 	  }
 	  
-	  try {
-		task.get();
+	  
+//		task.get();
 		notes.remove(noteToDelete);
-	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (ExecutionException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+	
 	  
 	  
 	 adapter.notifyDataSetChanged();
