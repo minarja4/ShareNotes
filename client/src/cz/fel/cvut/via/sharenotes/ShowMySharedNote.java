@@ -9,19 +9,29 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import cz.fel.cvut.via.asyncTasks.DeleteNoteTask;
+import cz.fel.cvut.via.asyncTasks.EditMySharesTask;
 import cz.fel.cvut.via.asyncTasks.GetSharesTask;
+import cz.fel.cvut.via.db.notes.DeleteNoteFromDB;
 import cz.fel.cvut.via.entities.Note;
 import cz.fel.cvut.via.entities.Share;
+import cz.fel.cvut.via.entities.SharesNoteCarry;
 
 public class ShowMySharedNote extends Activity {
 
 	List<Share> list = new ArrayList<Share>();
 	SharesArrayAdapter adapter = null;
 	Note actualNote = null;
+	Share shareToDele = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +86,7 @@ public class ShowMySharedNote extends Activity {
 		adapter = new SharesArrayAdapter(this, R.layout.listview_item, list);
 		listview.setAdapter(adapter);
 		
-//		registerForContextMenu(listview);
+		registerForContextMenu(listview);
 //		listview.setOnItemClickListener(new OnItemClickListener() {
 //
 //			@Override
@@ -96,6 +106,38 @@ public class ShowMySharedNote extends Activity {
 	}
 	
 	
+	
+	//kontextove menu
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {
+	  if (v.getId()==R.id.show_my_shared_shares) {
+	    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+//	    Toast.makeText(this, "Vybrana poznamka: " + notes.get(info.position), Toast.LENGTH_SHORT).show();
+	    shareToDele = adapter.getItem(info.position);
+	    menu.add(Menu.NONE, 0, 0, "Smazat");
+	    
+	  }
+	}
+	
+	
+	//kliknuti na kontextove menu
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {	  
+	  int menuItemIndex = item.getItemId();
+	  
+	  if (menuItemIndex == 0) {
+		  if (shareToDele != null) {
+			  Toast.makeText(this, "Mazu: " + shareToDele.getUsername(), Toast.LENGTH_SHORT).show();
+			adapter.remove(shareToDele);  
+		  }
+	  }
+	  
+	  adapter.notifyDataSetChanged();
+	  
+	  return true;
+	}
+	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -106,6 +148,15 @@ public class ShowMySharedNote extends Activity {
 	@Override
 	public void onBackPressed() {
 		finish();
+	}
+	
+	public void save(View view) {
+		List<Share> list = adapter.getList();
+		
+		SharesNoteCarry carry = new SharesNoteCarry(actualNote, list);
+		EditMySharesTask task = new EditMySharesTask();
+		task.execute(carry);
+		
 	}
 	
 }

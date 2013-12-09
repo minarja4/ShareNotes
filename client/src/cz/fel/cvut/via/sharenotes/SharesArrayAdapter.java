@@ -32,6 +32,11 @@ public class SharesArrayAdapter extends ArrayAdapter<Share> {
 		}
 
 		@Override
+		public void remove(Share object) {
+			list.remove(object);
+		}
+
+		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 
 			View v = convertView;
@@ -52,6 +57,10 @@ public class SharesArrayAdapter extends ArrayAdapter<Share> {
 
 			
 			return v;
+		}
+		
+		public List<Share> getList() {
+			return list;
 		}
 
 	}

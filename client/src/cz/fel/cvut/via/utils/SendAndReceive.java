@@ -7,12 +7,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.List;
 
 import android.util.Log;
 
 import com.google.gson.Gson;
 
 import cz.fel.cvut.via.entities.Note;
+import cz.fel.cvut.via.entities.Share;
 
 public class SendAndReceive {
 	private static Gson gson = new Gson();
@@ -271,6 +273,35 @@ public class SendAndReceive {
 
 			
 			return getResponse(con);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		return null;
+	}
+	
+	//update shares
+	public static String updateMyShares(Note note, List<Share> shares, String token, String username) throws Exception {
+		try {
+			URL url = null;
+			
+			url = new URL(Utils.URL +  "/" + username + "/sharing/" + note.getId());
+			
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			
+			setConnectionParameters(token, con, "PUT", true, false);
+			
+			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+			wr.writeBytes(gson.toJson(shares));
+
+			System.out.println("JSON UPDATE: " + gson.toJson(shares));
+			
+			wr.flush();
+			wr.close();	
+			
+			printResponse(con);
+
 
 		} catch (Exception e) {
 			e.printStackTrace();
