@@ -32,12 +32,12 @@
         android:layout_marginTop="30dp" >
     </ListView>
 
-    <Button
-        android:id="@+id/refreshButtonShared"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView1"
-        android:layout_alignLeft="@+id/notesListViewShared"        
-        android:text="Refresh data" />
+<!--     <Button -->
+<!--         android:id="@+id/refreshButtonShared" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_alignBottom="@+id/textView1" -->
+<!--         android:layout_alignLeft="@+id/notesListViewShared"         -->
+<!--         android:text="Refresh data" /> -->
 
 </RelativeLayout>

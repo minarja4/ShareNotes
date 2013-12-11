@@ -23,7 +23,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 import cz.fel.cvut.via.asyncTasks.DeleteNoteTask;
 import cz.fel.cvut.via.asyncTasks.GetMyNotesTask;
 import cz.fel.cvut.via.db.notes.DeleteNoteFromDB;
@@ -65,16 +64,16 @@ public class MyNotesFragment extends Fragment {
 
 		handler = new Handler();
 
-		// nastaveni akce tlacitka na refresh
-		Button refreshButton = (Button) rootView
-				.findViewById(R.id.refreshButton);
-		refreshButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				readNotesAndShow(mine);
-			}
-		});
+//		// nastaveni akce tlacitka na refresh
+//		Button refreshButton = (Button) rootView
+//				.findViewById(R.id.refreshButton);
+//		refreshButton.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				readNotesAndShow(mine);
+//			}
+//		});
 
 		// start task
 		notesChecker.run();
