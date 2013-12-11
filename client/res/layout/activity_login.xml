@@ -8,21 +8,36 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".LoginActivity" >
 
+        <TextView
+        android:id="@+id/loginText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Přihlášení"
+        android:textSize="35sp" />
+        
     <TextView
         android:id="@+id/welcomeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_below="@+id/loginText"
+        android:layout_marginTop="30dp"
         android:text="Přihlaste se prosím. V případě že nemáte vytvořený účet, se nejdříve zaregistrujte pomocí tlačítka &apos;Registrovat&apos;."
         android:textSize="20sp" />
 
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/welcomeText"
+            android:gravity="center">
         <TextView
         android:id="@+id/usernameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_below="@+id/welcomeText"
+        android:layout_marginTop="40dp"
+        
         android:text="Uživatelské jméno:"
         android:textSize="15sp" />
 
@@ -58,12 +73,17 @@
         android:hint="password"
         android:inputType="textPassword" />
 
+       <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/password"
+            android:layout_gravity="center">
     <Button
         android:id="@+id/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/password"
         android:layout_marginTop="30dp"
+         android:layout_marginLeft="40dp"
         android:onClick="login"
         android:text="Přihlásit" />
 
@@ -76,5 +96,7 @@
         android:layout_marginLeft="20dp"
         android:onClick="register"
         android:text="Registrovat" />
+    </RelativeLayout>
+        </RelativeLayout>
 
 </RelativeLayout>

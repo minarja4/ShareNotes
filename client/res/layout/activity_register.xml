@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+     android:id="@+id/relativeLayoutRegisterParent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -11,46 +12,103 @@
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Registrace nového uživatele"
+        android:textSize="35sp" />
+    
+        <TextView
+        android:id="@+id/registerText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="34dp"
-        android:text="Registrace noveho uzivatele"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/textView2"
+        android:layout_marginTop="30dp"
+        android:text="Pro úspěšnou registraci je třeba vyplnit všechny údaje. Uživatelské jméno se NESMÍ shodovat s heslem a musí být dostatečně dlouhé."
+        android:textSize="20sp" />
 
+          <RelativeLayout
+              android:id="@+id/relativeLayoutRegisterFields"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/registerText"
+            android:gravity="center">
+            
+        <TextView
+        android:id="@+id/createUsernameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        
+        android:text="Uživatelské jméno:"
+        android:textSize="15sp" />
+        
     <EditText
         android:id="@+id/createUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
-        android:layout_marginTop="30dp"
+        android:layout_alignTop="@+id/createUsernameTextView"
+        android:layout_toRightOf="@+id/createUsernameTextView"
+        android:layout_marginLeft="15dp"
         android:ems="10"
         android:hint="username" />
+    
+       <TextView
+        android:id="@+id/createEmailTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/createUsernameTextView"
+         android:layout_alignLeft="@+id/createUsernameTextView"
+        android:layout_marginTop="30dp"
+        android:text="E-mail:"
+        android:textSize="15sp" />
 
     <EditText
         android:id="@+id/createEmail"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/createUsername"
-        android:layout_below="@+id/createUsername"
+        android:layout_height="wrap_content"        
+        android:layout_toRightOf="@+id/createEmailTextView"   
+        android:layout_alignLeft="@+id/createUsername" 
+        android:layout_alignTop="@+id/createEmailTextView"
         android:ems="10"
-        android:hint="email" />
+        android:hint="email@email.xx" />
+    
+      <TextView
+        android:id="@+id/createPasswordTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/createEmailTextView"
+         android:layout_alignLeft="@+id/createEmailTextView"
+        android:layout_marginTop="30dp"
+        android:text="Heslo:"
+        android:textSize="15sp" />
 
     <EditText
         android:id="@+id/createPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/createEmail"
-        android:layout_below="@+id/createEmail"
+        android:layout_alignTop="@+id/createPasswordTextView"
+        android:layout_toRightOf="@+id/createEmailTextView"
+        android:layout_alignLeft="@+id/createEmail"        
         android:ems="10"
         android:hint="password" />
-
+ </RelativeLayout>
+       <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relativeLayoutRegisterFields"
+            android:layout_alignLeft="@+id/relativeLayoutRegisterFields"  
+            android:gravity="center">
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/createEmail"
-        android:layout_alignBottom="@+id/createEmail"
-        android:layout_toRightOf="@+id/textView2"
+        android:layout_height="wrap_content" 
+         android:layout_marginTop="30dp"
         android:onClick="register"
-        android:text="Register" />
+        android:text="Potvrdit registraci" />
+       
+        </RelativeLayout>
+
 
 </RelativeLayout>
