@@ -9,7 +9,8 @@
         android:targetSdkVersion="16" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:debuggable="true"
@@ -32,6 +33,34 @@
         <activity
             android:name="cz.fel.cvut.via.sharenotes.AddNote"
             android:label="@string/title_activity_add_note" >
+        </activity>
+        <activity
+            android:name="cz.fel.cvut.via.sharenotes.ShowNoteActivity"
+            android:label="@string/title_activity_show_note" >
+        </activity>
+        <activity
+            android:name="cz.fel.cvut.via.sharenotes.EditNoteActivity"
+            android:label="@string/title_activity_edit_note" >
+        </activity>
+        <activity
+            android:name="cz.fel.cvut.via.sharenotes.MySharedNotesActivity"
+            android:label="@string/title_activity_my_shared" >
+        </activity>
+        <activity
+            android:name="cz.fel.cvut.via.sharenotes.RegisterActivity"
+            android:label="@string/title_activity_register" >
+        </activity>
+        <activity
+            android:name="cz.fel.cvut.via.sharenotes.ShareNoteActivity"
+            android:label="@string/title_activity_share_note" >
+        </activity>
+        <activity
+            android:name="cz.fel.cvut.via.sharenotes.ShowMySharedNote"
+            android:label="@string/title_activity_show_my_shared_note" >
+        </activity>
+        <activity
+            android:name="cz.fel.cvut.via.sharenotes.ShowSharedNoteActivity"
+            android:label="@string/title_activity_show_shared_note" >
         </activity>
     </application>
 
