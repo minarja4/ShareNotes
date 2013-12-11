@@ -42,13 +42,13 @@
         android:layout_marginTop="40dp"
         
         android:text="Uživatelské jméno:"
-        android:textSize="15sp" />
+        android:textSize="20sp" />
         
     <EditText
         android:id="@+id/createUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/createUsernameTextView"
+        android:layout_alignBottom="@+id/createUsernameTextView"
         android:layout_toRightOf="@+id/createUsernameTextView"
         android:layout_marginLeft="15dp"
         android:ems="10"
@@ -62,7 +62,7 @@
          android:layout_alignLeft="@+id/createUsernameTextView"
         android:layout_marginTop="30dp"
         android:text="E-mail:"
-        android:textSize="15sp" />
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/createEmail"
@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"        
         android:layout_toRightOf="@+id/createEmailTextView"   
         android:layout_alignLeft="@+id/createUsername" 
-        android:layout_alignTop="@+id/createEmailTextView"
+        android:layout_alignBottom="@+id/createEmailTextView"
         android:ems="10"
         android:hint="email@email.xx" />
     
@@ -82,13 +82,13 @@
          android:layout_alignLeft="@+id/createEmailTextView"
         android:layout_marginTop="30dp"
         android:text="Heslo:"
-        android:textSize="15sp" />
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/createPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/createPasswordTextView"
+        android:layout_alignBottom="@+id/createPasswordTextView"
         android:layout_toRightOf="@+id/createPasswordTextView"
         android:layout_alignLeft="@+id/createEmail"        
         android:ems="10"
@@ -103,13 +103,13 @@
          android:layout_alignLeft="@+id/createPasswordTextView"
         android:layout_marginTop="30dp"
         android:text="Heslo znovu:"
-        android:textSize="15sp" />
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/createCheckPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/createCheckPasswordTextView"
+        android:layout_alignBottom="@+id/createCheckPasswordTextView"
         android:layout_toRightOf="@+id/createCheckPasswordTextView"
         android:layout_alignLeft="@+id/createPassword"        
         android:ems="10"
