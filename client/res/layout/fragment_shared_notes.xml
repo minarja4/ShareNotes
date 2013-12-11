@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="Sdílené poznámky"
+        android:text="Poznámky sdílené se mnou"
         android:textSize="35sp" />
 
     <ListView
