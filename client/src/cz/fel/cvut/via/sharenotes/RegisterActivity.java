@@ -56,7 +56,7 @@ public class RegisterActivity extends Activity {
 			User result = t.get();
 			
 			if (result == null) {
-				Log.e(MainActivity.class.getName(), "Uzivatel NEbyl vytvoren.");
+				Log.e(RegisterActivity.class.getName(), "Uzivatel NEbyl vytvoren.");
 				Toast.makeText(this, "Chyba pri vytvareni usera", Toast.LENGTH_LONG).show();
 			}
 		
@@ -65,11 +65,11 @@ public class RegisterActivity extends Activity {
 			finish();
 			
 		} catch (InterruptedException e) {
-			Log.e(MainActivity.class.getName(), "Vytvareni uzivatele bylo preruseno.");
+			Log.e(RegisterActivity.class.getName(), "Vytvareni uzivatele bylo preruseno.");
 			Toast.makeText(this, "Chyba pri vytvareni usera", Toast.LENGTH_LONG).show();
 		} catch (ExecutionException e) {
 			Toast.makeText(this, "Chyba pri vytvareni usera", Toast.LENGTH_LONG).show();
-			Log.e(MainActivity.class.getName(), "Vytvareni uzivatele nebylo dokonceno.");
+			Log.e(RegisterActivity.class.getName(), "Vytvareni uzivatele nebylo dokonceno.");
 		}
     	
     	
