@@ -88,6 +88,7 @@ public class MyNotesFragment extends Fragment {
 	}
 
 	protected void readNotesAndShow(boolean mine) {
+		try {
 		// ziskame svoje poznamky - pokud jsme online
 		
 		if(Login.getLoggedUser()==null){
@@ -153,7 +154,11 @@ public class MyNotesFragment extends Fragment {
 				}
 			}
 		});
-	}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	} 
 
 	// kontextove menu
 	@Override

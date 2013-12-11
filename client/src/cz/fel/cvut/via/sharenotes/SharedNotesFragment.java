@@ -80,6 +80,7 @@ public class SharedNotesFragment extends Fragment {
     
 
 	private void readNotesAndShow(boolean mine) {
+		try {
 		// ziskame sdilene poznamky - pokud jsme online
 		
 		
@@ -137,8 +138,10 @@ public class SharedNotesFragment extends Fragment {
 				startActivityForResult(i, 44);
 				
 			}
+			
 		});
-	}
+		} catch (Exception e){}
+	} 
 
 
 	
