@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -38,6 +39,18 @@ public class SharedNotesFragment extends Fragment {
 	
 	View rootView = null;
 	
+	private int interval = 60000; // refresh kazdych 60s
+	private Handler handler;
+	
+	Runnable notesChecker = new Runnable() {
+		@Override
+		public void run() {
+//			Toast.makeText(getActivity(), "refresh", Toast.LENGTH_SHORT).show();
+			readNotesAndShow(mine);
+			handler.postDelayed(notesChecker, interval);
+		}
+	};
+	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -47,15 +60,19 @@ public class SharedNotesFragment extends Fragment {
         this.rootView = rootView;
         readNotesAndShow(mine);
         
+        handler = new Handler();
+        
         //nastaveni akce tlacitka na refresh
-        Button refreshButton = (Button) rootView.findViewById(R.id.refreshButtonShared);
-        refreshButton.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				readNotesAndShow(mine);
-			}
-		});
+//        Button refreshButton = (Button) rootView.findViewById(R.id.refreshButtonShared);
+//        refreshButton.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				readNotesAndShow(mine);
+//			}
+//		});
+        
+        notesChecker.run();
                 
         return rootView;
     }

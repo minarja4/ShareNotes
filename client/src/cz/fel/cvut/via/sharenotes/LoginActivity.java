@@ -67,7 +67,7 @@ public class LoginActivity extends Activity {
 	    		
 	    		
 	    		
-	    		Toast.makeText(this, "User zalogovan: " + Login.getLoggedUser().getToken(), Toast.LENGTH_LONG).show();
+//	    		Toast.makeText(this, "User zalogovan: " + Login.getLoggedUser().getToken(), Toast.LENGTH_LONG).show();
 	    		
 	    		//vlozeni udaju do DB    		
 	    		InsertLogin.save(this, Login.getLoggedUser());
