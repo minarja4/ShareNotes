@@ -89,10 +89,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/createPasswordTextView"
-        android:layout_toRightOf="@+id/createEmailTextView"
+        android:layout_toRightOf="@+id/createPasswordTextView"
         android:layout_alignLeft="@+id/createEmail"        
         android:ems="10"
-        android:hint="password" />
+        android:hint="password" 
+        android:inputType="textPassword" />
+    
+         <TextView
+        android:id="@+id/createCheckPasswordTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/createPasswordTextView"
+         android:layout_alignLeft="@+id/createPasswordTextView"
+        android:layout_marginTop="30dp"
+        android:text="Heslo znovu:"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/createCheckPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/createCheckPasswordTextView"
+        android:layout_toRightOf="@+id/createCheckPasswordTextView"
+        android:layout_alignLeft="@+id/createPassword"        
+        android:ems="10"
+        android:hint="password again"
+        android:inputType="textPassword"  />
+    
+    
  </RelativeLayout>
        <RelativeLayout
             android:layout_width="fill_parent"
