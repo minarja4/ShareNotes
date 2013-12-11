@@ -24,6 +24,15 @@ public class NotesArrayAdapter<T extends Note> extends ArrayAdapter<T> {
 			ctx = context;
 		}
 
+		
+		
+		@Override
+		public void remove(T object) {
+			list.remove(object);
+		}
+
+
+
 		@Override
 		public int getCount() {
 			return list.size();
