@@ -9,7 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
-        android:textColor="#CC0033"     
+        android:textColor="#CC0033"   
+        android:maxLines="1"  
         android:textSize="25dp"
                   />
 
@@ -20,7 +21,7 @@
         android:layout_below="@+id/noteTitle"
         android:paddingLeft="10dp"
         android:text="aaa"
-        android:width="200dp"
+        android:maxLines="5"
         android:textColor="#3399FF"
         android:textSize="20dp"
         />
