@@ -9,11 +9,16 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
+import cz.fel.cvut.via.asyncTasks.DeleteMySharedNote;
 import cz.fel.cvut.via.asyncTasks.GetMySharedNotesTask;
 import cz.fel.cvut.via.entities.Note;
 
@@ -21,6 +26,7 @@ public class MySharedNotesActivity extends Activity {
 
 	List<Note> list = null;
 	NotesArrayAdapter<Note> adapter = null;
+	private Note noteToDelete = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +86,42 @@ public class MySharedNotesActivity extends Activity {
 		});
 	}
 	
+	
+//	kontextove menu
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {
+//	  if (v.getId()==R.id.) {
+	    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+//	    Toast.makeText(this, "Vybrana poznamka: " + notes.get(info.position), Toast.LENGTH_SHORT).show();
+	    noteToDelete = adapter.getItem(info.position);
+	    menu.add(Menu.NONE, 0, 0, "Smazat");
+	    
+//	  }
+	}
+	
+	
+	//kliknuti na kontextove menu
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {	  
+	  int menuItemIndex = item.getItemId();
+	  
+	  if (menuItemIndex == 0) {
+		  if (noteToDelete != null) {
+//			  Toast.makeText(this, "Mazu: " + shareToDele.getUsername(), Toast.LENGTH_SHORT).show();
+			adapter.remove(noteToDelete);
+			adapter.notifyDataSetChanged();
+			
+			DeleteMySharedNote task = new DeleteMySharedNote();
+			task.execute(noteToDelete);
+			
+			
+		  }
+	  }
+	  
+	  adapter.notifyDataSetChanged();
+	  
+	  return true;
+	}
 	
 	
 	@Override

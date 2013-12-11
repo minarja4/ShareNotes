@@ -6,24 +6,23 @@ import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import cz.fel.cvut.via.asyncTasks.DeleteNoteTask;
 import cz.fel.cvut.via.asyncTasks.EditMySharesTask;
 import cz.fel.cvut.via.asyncTasks.GetSharesTask;
-import cz.fel.cvut.via.db.notes.DeleteNoteFromDB;
 import cz.fel.cvut.via.entities.Note;
 import cz.fel.cvut.via.entities.Share;
+import cz.fel.cvut.via.entities.SharedNote;
 import cz.fel.cvut.via.entities.SharesNoteCarry;
 
 public class ShowMySharedNote extends Activity {
@@ -86,56 +85,56 @@ public class ShowMySharedNote extends Activity {
 		adapter = new SharesArrayAdapter(this, R.layout.listview_item, list);
 		listview.setAdapter(adapter);
 		
-		registerForContextMenu(listview);
-//		listview.setOnItemClickListener(new OnItemClickListener() {
-//
-//			@Override
-//			public void onItemClick(AdapterView<?> parent, View view, int pos,
-//					long id) {
-//				
-//				SharedNote n = (SharedNote) listview.getItemAtPosition(pos);
-//				
-//				
-//				Intent i = new Intent(view.getContext(), ShowSharedNoteActivity.class);
-//				i.putExtra("note", n);												
-//				
-//				startActivityForResult(i, 44);
-//				
-//			}
-//		});
+//		registerForContextMenu(listview);
+		listview.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int pos,
+					long id) {
+				
+				shareToDele = (Share) listview.getItemAtPosition(pos);
+								
+				 if (shareToDele != null) {
+//					  Toast.makeText(this, "Mazu: " + shareToDele.getUsername(), Toast.LENGTH_SHORT).show();
+					adapter.remove(shareToDele);  
+					adapter.notifyDataSetChanged();
+				  }
+				
+			}
+		});
 	}
 	
 	
 	
-	//kontextove menu
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {
-	  if (v.getId()==R.id.show_my_shared_shares) {
-	    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-//	    Toast.makeText(this, "Vybrana poznamka: " + notes.get(info.position), Toast.LENGTH_SHORT).show();
-	    shareToDele = adapter.getItem(info.position);
-	    menu.add(Menu.NONE, 0, 0, "Smazat");
-	    
-	  }
-	}
-	
-	
+//	//kontextove menu
+//	@Override
+//	public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {
+//	  if (v.getId()==R.id.show_my_shared_shares) {
+//	    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+////	    Toast.makeText(this, "Vybrana poznamka: " + notes.get(info.position), Toast.LENGTH_SHORT).show();
+//	    shareToDele = adapter.getItem(info.position);
+//	    menu.add(Menu.NONE, 0, 0, "Smazat");
+//	    
+//	  }
+//	}
+//	
+//	
 	//kliknuti na kontextove menu
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {	  
-	  int menuItemIndex = item.getItemId();
-	  
-	  if (menuItemIndex == 0) {
-		  if (shareToDele != null) {
-			  Toast.makeText(this, "Mazu: " + shareToDele.getUsername(), Toast.LENGTH_SHORT).show();
-			adapter.remove(shareToDele);  
-		  }
-	  }
-	  
-	  adapter.notifyDataSetChanged();
-	  
-	  return true;
-	}
+//	@Override
+//	public boolean onContextItemSelected(MenuItem item) {	  
+//	  int menuItemIndex = item.getItemId();
+//	  
+//	  if (menuItemIndex == 0) {
+//		  if (shareToDele != null) {
+//			  Toast.makeText(this, "Mazu: " + shareToDele.getUsername(), Toast.LENGTH_SHORT).show();
+//			adapter.remove(shareToDele);  
+//		  }
+//	  }
+//	  
+//	  adapter.notifyDataSetChanged();
+//	  
+//	  return true;
+//	}
 	
 	
 	@Override

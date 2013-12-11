@@ -37,17 +37,10 @@ public class RegisterActivity extends Activity {
     	EditText usernameE = (EditText) findViewById(R.id.createUsername);
     	EditText emailE = (EditText) findViewById(R.id.createEmail);
     	EditText passE = (EditText) findViewById(R.id.createPassword);
-    	EditText passCheckE = (EditText) findViewById(R.id.createCheckPassword);
     	
     	String username = usernameE.getText().toString();
     	String email = emailE.getText().toString();
     	String pass = passE.getText().toString();
-    	String passCheck = passCheckE.getText().toString();
-    	
-    	if(!pass.equals(passCheck)){
-			Toast.makeText(this, "Zadaná hesla nebyla stejná", Toast.LENGTH_LONG).show();
-    		return;
-    	}
     	
     	User u = new User();
     	u.setEmail(email);

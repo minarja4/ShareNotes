@@ -310,4 +310,31 @@ public class SendAndReceive {
 		return null;
 	}
 	
+	//delete note or remove from shared with me
+		public static String deleteMySharedNote(Note note, String token, String username) throws Exception {
+			try {
+				URL url = null;
+				
+				
+				url = new URL(Utils.URL +  "/" + username + "/sharing/" + note.getId());
+				HttpURLConnection con = (HttpURLConnection) url.openConnection();
+				
+				con.setRequestMethod("DELETE");
+				con.setRequestProperty("X-Token", token);
+
+				setConnectionParameters(token, con, "DELETE", false, false);
+				
+				int responseCode = con.getResponseCode();
+				System.out.println("Response to Delete: " + responseCode);
+
+
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		
+			return null;
+		}
+
+	
 }

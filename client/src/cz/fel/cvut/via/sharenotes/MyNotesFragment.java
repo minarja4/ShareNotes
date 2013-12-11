@@ -89,9 +89,6 @@ public class MyNotesFragment extends Fragment {
 
 	protected void readNotesAndShow(boolean mine) {
 		// ziskame svoje poznamky - pokud jsme online
-		
-		//kdyz neni uzivatel prihlasen tak stahovani nema smysl
-		if(Login.getLoggedUser()==null)return;
 		// jsme online?
 		ConnectivityManager cm = (ConnectivityManager) getActivity()
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
