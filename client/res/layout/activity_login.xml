@@ -8,48 +8,73 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".LoginActivity" >
 
-    <Button
-        android:id="@+id/login"
+    <TextView
+        android:id="@+id/welcomeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/username"
-        android:layout_marginTop="59dp"
-        android:layout_toRightOf="@+id/username"
-        android:onClick="login"
-        android:text="Login" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Přihlaste se prosím. V případě že nemáte vytvořený účet, se nejdříve zaregistrujte pomocí tlačítka &apos;Registrovat&apos;."
+        android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/button1"
+        <TextView
+        android:id="@+id/usernameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/username"
-        android:layout_below="@+id/login"
-        android:layout_marginLeft="59dp"
-        android:layout_marginTop="51dp"
-        android:onClick="register"
-        android:text="Register" />
-
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="99dp"
-        android:layout_toLeftOf="@+id/login"
-        android:ems="10"
-        android:hint="password" >
-
-        <requestFocus />
-    </EditText>
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/welcomeText"
+        android:text="Uživatelské jméno:"
+        android:textSize="15sp" />
 
     <EditText
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="40dp"
+        android:layout_alignTop="@+id/usernameTextView"
+        android:layout_toRightOf="@+id/usernameTextView"
+        android:layout_marginLeft="15dp"
         android:ems="10"
-        android:hint="username" />
+        android:hint="username" >
+        <requestFocus />
+    </EditText>
+
+                <TextView
+        android:id="@+id/passwordTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/usernameTextView"
+         android:layout_alignLeft="@+id/usernameTextView"
+        android:layout_marginTop="30dp"
+        android:text="Heslo:"
+        android:textSize="15sp" />
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       android:layout_alignTop="@+id/passwordTextView"
+         android:layout_toRightOf="@+id/passwordTextView"
+         android:layout_alignLeft="@+id/username"
+        android:ems="10"
+        android:hint="password"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/password"
+        android:layout_marginTop="30dp"
+        android:onClick="login"
+        android:text="Přihlásit" />
+
+    <Button
+        android:id="@+id/register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/login"
+        android:layout_toRightOf="@+id/login"
+        android:layout_marginLeft="20dp"
+        android:onClick="register"
+        android:text="Registrovat" />
 
 </RelativeLayout>
