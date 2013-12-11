@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
+        android:layout_marginTop="15dp"
         android:textColor="#CC0033"   
         android:maxLines="1"  
         android:textSize="25dp"
@@ -24,6 +25,7 @@
         android:maxLines="5"
         android:textColor="#3399FF"
         android:textSize="20dp"
+        android:paddingBottom="10dp"
         />
 
 </RelativeLayout>
