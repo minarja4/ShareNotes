@@ -26,7 +26,7 @@ public class ShareNoteActivity extends Activity {
 		sharedNote = (Note) getIntent().getSerializableExtra("note");
 		
 		TextView t = (TextView) findViewById(R.id.shareNoteName);
-		t.setTag(sharedNote.getName());
+		t.setText(sharedNote.getName());
 		
 	}
 	

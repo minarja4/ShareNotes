@@ -8,48 +8,74 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ShareNoteActivity" >
 
-    <EditText
-        android:id="@+id/shareToUsername"
-        android:hint="username komu sdilim"
+    <TextView
+        android:id="@+id/shareTextView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="54dp"
-        android:ems="10" >
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Sdílet poznámku"
+        android:textSize="35sp" />
 
-        <requestFocus />
-    </EditText>
-
-    <Button
-        android:id="@+id/button1"        
+    <TextView
+        android:id="@+id/shareNoteNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/shareToUsername"
-        android:layout_below="@+id/shareToUsername"
-        android:layout_marginRight="67dp"
-        android:layout_marginTop="53dp"
-        android:onClick="share"
-        android:text="Share" />
+        android:layout_below="@+id/shareTextView1"
+        android:layout_marginTop="40dp"
+        android:text="Název poznámky:"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/shareNoteName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/checkBox1"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="41dp"
+        android:layout_alignBottom="@+id/shareNoteNameLabel"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/shareUserNameLabel"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/shareUserNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/shareNoteNameLabel"
+        android:layout_marginTop="40dp"
+        android:text="Uživatelské jméno komu sdílím:"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/shareToUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/shareUserNameLabel"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/shareUserNameLabel"
+        android:ems="10"
+        android:hint="username to share" >
+
+        <requestFocus />
+    </EditText>
 
     <CheckBox
         android:id="@+id/shareReadOnly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/shareToUsername"
-        android:layout_marginLeft="39dp"
-        android:checked="true"
+        android:layout_marginLeft="15dp"
         android:layout_toRightOf="@+id/shareToUsername"
-        android:text="Read only" />
+        android:checked="true"
+        android:text="Pouze právo číst" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/shareReadOnly"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:onClick="share"
+        android:text="Sdílet" />
 
 </RelativeLayout>
