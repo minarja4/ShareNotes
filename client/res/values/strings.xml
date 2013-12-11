@@ -15,7 +15,7 @@
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
-    <string name="title_activity_show_shared_note">ShowSharedNoteActivity</string>
+    <string name="title_activity_show_shared_note">Zobrazení sdílené poznámky</string>
     <string name="title_activity_my_shared">Mé sdílené poznámky</string>
     <string name="title_activity_show_my_shared_note">Moje sdílené poznámky</string>
 
