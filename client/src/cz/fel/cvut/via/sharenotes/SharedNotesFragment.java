@@ -27,6 +27,7 @@ import android.widget.ListView;
 import cz.fel.cvut.via.asyncTasks.DeleteNoteTask;
 import cz.fel.cvut.via.asyncTasks.GetSharedNotesTask;
 import cz.fel.cvut.via.entities.SharedNote;
+import cz.fel.cvut.via.utils.Login;
  
 public class SharedNotesFragment extends Fragment {
  
@@ -80,6 +81,10 @@ public class SharedNotesFragment extends Fragment {
 
 	private void readNotesAndShow(boolean mine) {
 		// ziskame sdilene poznamky - pokud jsme online
+		
+		//kdyz neni uzivatel prihlasen tak stahovani nema smysl
+		if(Login.getLoggedUser()==null)return;
+		
 		//jsme online?
 		ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 		 
