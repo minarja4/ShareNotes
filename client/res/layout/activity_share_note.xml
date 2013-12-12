@@ -16,12 +16,18 @@
         android:layout_marginTop="10dp"
         android:text="Sdílet poznámku"
         android:textSize="35sp" />
+    
+     <RelativeLayout
+              android:id="@+id/relativeLayoutShareFields"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/shareTextView1"
+            android:gravity="center">
 
     <TextView
         android:id="@+id/shareNoteNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/shareTextView1"
         android:layout_marginTop="40dp"
         android:text="Název poznámky:"
         android:textSize="20sp" />
@@ -31,8 +37,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/shareNoteNameLabel"
+        android:layout_toRightOf="@+id/shareNoteNameLabel"
         android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@+id/shareUserNameLabel"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -42,16 +48,16 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/shareNoteNameLabel"
         android:layout_marginTop="40dp"
-        android:text="Uživatelské jméno komu sdílím:"
+        android:text="Komu sdílím:"
         android:textSize="20sp" />
 
     <EditText
         android:id="@+id/shareToUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/shareUserNameLabel"
-        android:layout_marginLeft="15dp"
+        android:layout_alignBottom="@+id/shareUserNameLabel"   
         android:layout_toRightOf="@+id/shareUserNameLabel"
+        android:layout_alignLeft="@+id/shareNoteName"
         android:ems="10"
         android:hint="username to share" >
 
@@ -67,15 +73,20 @@
         android:layout_toRightOf="@+id/shareToUsername"
         android:checked="true"
         android:text="Pouze právo číst" />
+    </RelativeLayout>
 
+      <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relativeLayoutShareFields"
+            android:layout_alignLeft="@+id/relativeLayoutShareFields"  
+            android:gravity="center">
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/shareReadOnly"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:onClick="share"
         android:text="Sdílet" />
-
+	</RelativeLayout>
 </RelativeLayout>
