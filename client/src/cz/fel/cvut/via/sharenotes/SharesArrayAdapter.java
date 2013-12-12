@@ -53,7 +53,7 @@ public class SharesArrayAdapter extends ArrayAdapter<Share> {
 
 			
 			title.setText(share.getUsername());
-			desc.setText(share.isReadonly()?"Má právo pouze číst":"Má právo zapisovat");
+			desc.setText(share.isReadonly()?R.string.read_access:R.string.write_access);
 
 			
 			return v;
