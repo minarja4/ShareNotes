@@ -5,12 +5,14 @@ import java.util.List;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.opengl.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import cz.fel.cvut.via.entities.Note;
+import cz.fel.cvut.via.utils.Login;
 
 public class NotesArrayAdapter<T extends Note> extends ArrayAdapter<T> {
 
@@ -68,6 +70,16 @@ public class NotesArrayAdapter<T extends Note> extends ArrayAdapter<T> {
 				title.setText(note.getName());
 				desc.setText(note.getNote());
 
+				
+				//pokud zobrazujeme sdilenou tak ukazem i ownera
+				if (!note.getOwner().equals(Login.getLoggedUser().getUsername())) {
+					TextView owner = (TextView) v.findViewById(R.id.showOwnerShare);
+					
+					owner.setText(owner.getText() + " " + note.getOwner());
+					owner.setVisibility(View.VISIBLE);
+
+				}
+				
 			}
 
 			return v;
