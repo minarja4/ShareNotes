@@ -33,10 +33,17 @@ public class MySharedNotesActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_shared);
 	
-		readNotesAndShow();
+		//readNotesAndShow();
 		
 	}
 
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		readNotesAndShow();
+		
+	}
 	
 	protected void readNotesAndShow() {
 		//jsme online?

@@ -153,6 +153,7 @@ public class ShowMySharedNote extends Activity {
 		SharesNoteCarry carry = new SharesNoteCarry(actualNote, list);
 		EditMySharesTask task = new EditMySharesTask();
 		task.execute(carry);
+		finish();
 		
 	}
 	
