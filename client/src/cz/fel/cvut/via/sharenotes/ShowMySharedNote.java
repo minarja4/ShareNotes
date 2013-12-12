@@ -40,10 +40,8 @@ public class ShowMySharedNote extends Activity {
 		actualNote = (Note) getIntent().getSerializableExtra("note");
 		
 		TextView name = (TextView) findViewById(R.id.show_my_shared_name);
-		TextView note = (TextView) findViewById(R.id.show_my_shared_note);
 		
 		name.setText(actualNote.getName());
-		note.setText(actualNote.getNote());
 		
 		readNotesAndShow();
 	}
